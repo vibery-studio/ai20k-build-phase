@@ -1,1 +1,5 @@
 *.log
+private/*
+repos
+.DS_Store
+.claude/

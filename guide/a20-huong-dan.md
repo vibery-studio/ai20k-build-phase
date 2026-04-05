@@ -6,7 +6,7 @@ Chào các bạn! Mình chia sẻ một trick nhỏ giúp các bạn đỡ đau 
 
 ## Cài đặt (2 phút)
 
-**Bước 1:** Tải folder `a20` từ đây.
+**Bước 1:** Tải folder `a20` từ `resources/.claude/skills`
 
 **Bước 2:** Bỏ vào repo project của bạn, tùy tool đang dùng:
 

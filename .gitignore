@@ -4,3 +4,4 @@ repos
 .DS_Store
 .claude/
 !resources/.claude/
+.env

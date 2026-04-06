@@ -25,9 +25,13 @@ Với vai trò Coach, kho tài liệu này giúp bạn:
 - Theo dõi tiến độ theo cùng một khung làm việc xuyên suốt
 - Hướng dẫn sinh viên xây tư duy làm sản phẩm thực tế, không chỉ dừng ở viết code
 
-## Tài liệu hiện có
+## Tài liệu
 
-- [Hướng dẫn kích hoạt GitHub Projects](guide/huong-dan-kich-hoat-github-project.md)
+| Guide | Mô tả |
+|-------|-------|
+| [Roadmap kỹ năng](guide/roadmap-ky-nang.md) | Bản đồ kỹ năng theo tuần — self-assessment, rubric alignment, tài nguyên gợi ý |
+| [Hướng dẫn A20](guide/a20-huong-dan.md) | Hướng dẫn tổng quan cho nhóm A20 |
+| [Kích hoạt GitHub Projects](guide/huong-dan-kich-hoat-github-project.md) | Setup và sử dụng GitHub Projects để quản lý sprint |
 
 ## Cách sử dụng khuyến nghị
 

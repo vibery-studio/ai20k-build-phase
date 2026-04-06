@@ -5,4 +5,4 @@ repos
 .claude/
 !resources/.claude/
 .env
-scripts/*
+scripts/*CLAUDE.md

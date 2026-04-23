@@ -1337,31 +1337,17 @@
     </div>
     <div class="wrap">
       <div style="max-width: 640px;">
-        <div class="slide-kicker" style="color: var(--blue);">Block 3 · Deep demo · Chat + Context Panel · 40 phút</div>
-        <h1><span style="color: var(--blue);">Chat + Context</span> — pattern spotlight</h1>
+        <div class="slide-kicker" style="color: var(--blue);">Block 3 · Demo · Chat + Context Panel</div>
+        <h1>Mình sắp code <span style="color: var(--blue);">một app Chat + Context</span> trực tiếp.</h1>
 
-        <div class="team-anchor blue">
-          <div class="tnum" style="font-size: 0.6em; letter-spacing: -0.02em;">SHELL</div>
-          <div class="tname">
-            Conversational UI + Evidence Panel
-            <em>Chat trái, panel phải — panel = cửa sổ vào AI brain</em>
-          </div>
-        </div>
-
-        <p class="lede">Mình demo sâu <b>một</b> pattern thôi. Nhưng cùng shell này chạy được: <b>trợ giảng AI, LMS chatbot, gia sư Socratic, admissions, customer support, RAG.</b> Đổi payload trong panel — không đổi cấu trúc UI.</p>
+        <p class="lede">Một pattern thôi. Nhưng bạn sẽ thấy nó làm được: <b>trợ giảng AI, chatbot LMS, admissions, RAG, customer support.</b></p>
 
         <div class="also-teams">
-          <span class="al">Pattern transfers</span>
+          <span class="al">Pattern này áp được cho</span>
           <span class="team-chip blue">Socratic tutor</span>
-          <span class="team-chip blue">Admissions / policy bot</span>
-          <span class="team-chip blue">Digital twin what-if</span>
+          <span class="team-chip blue">Admissions bot</span>
+          <span class="team-chip blue">Digital twin</span>
           <span class="team-chip blue">Moderator chat</span>
-        </div>
-
-        <div class="stats" style="margin-top: 26px;">
-          <div class="stat"><span class="v">1</span><span class="k">pattern demo sâu</span></div>
-          <div class="stat"><span class="v">~40</span><span class="k">phút</span></div>
-          <div class="stat"><span class="v">5+</span><span class="k">app dùng lại được</span></div>
         </div>
       </div>
     </div>
@@ -1371,9 +1357,7 @@
   <section class="slide dark" data-title="Demo · Live">
     <span class="slide-num">14 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker" style="color: var(--blue);">Demo · 1 UI pattern</div>
-      <h1 style="font-size: clamp(44px, 8vw, 112px); line-height: 1.02; margin: 0;">Bạn thấy — <span style="color: var(--orange);">không đọc slide.</span></h1>
-      <p class="lede" style="margin-top: 28px; opacity: 0.75;">Baseline → +T → +C → +R. Tí nữa về app của bạn, cũng làm y như vậy.</p>
+      <h1 style="font-size: clamp(80px, 14vw, 200px); line-height: 1; margin: 0; letter-spacing: -0.02em;">Demo</h1>
     </div>
   </section>
 
@@ -1381,24 +1365,20 @@
   <section class="slide" data-title="Baseline · Chat cơ bản">
     <span class="slide-num">15 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker">Deep demo · Baseline · 6 phút</div>
-      <h1>Chat cơ bản — <span style="opacity: 0.55;">user không biết nguồn nào, độ tin cậy bao nhiêu</span></h1>
-      <p class="lede">Đây là điểm xuất phát, <b>giống 20 app khác</b>. Input → output, không gì ở giữa.</p>
+      <div class="slide-kicker">Bước 1 · Chat cơ bản</div>
+      <h1>Hỏi, trả lời. <span style="opacity: 0.55;">Không có gì ở giữa.</span></h1>
+      <p class="lede">Giống 20 app chat AI ngoài kia. User không biết AI lấy thông tin ở đâu, đúng bao nhiêu phần trăm.</p>
 
       <div class="slide-split">
         <div class="slide-copy">
           <div class="prompt" data-label="Prompt · baseline" data-accent="blue">Read GUIDELINE.md. Build React 18 + Vite chat app with 2 columns:
 left = message list + input, right = context panel (empty for now).
 Use src/llmService.js for LLM calls.</div>
-
-          <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.6; margin: 16px 0 0; opacity: 0.85;">
-            Chạy xong: hỏi — trả lời. User không biết AI dùng doc nào, confidence ra sao, có hallucinate không. <b>Pain = trust gap.</b>
-          </p>
         </div>
         <div class="slide-media">
           <figure>
             <img src="images/slide-14-demo1-baseline-pain.png" alt="Sketch: frustrated student waiting at loading spinner" />
-            <figcaption class="caption">Baseline = magic, no trust</figcaption>
+            <figcaption class="caption">Chưa có T·C·R = user phải tin mù</figcaption>
           </figure>
         </div>
       </div>
@@ -1409,25 +1389,20 @@ Use src/llmService.js for LLM calls.</div>
   <section class="slide" data-title="Prompt T · Transparency via panel">
     <span class="slide-num">16 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker"><span class="pill t">T · Transparency</span> Deep demo · 10 phút</div>
-      <h1>Panel = <span style="color: var(--orange);">cửa sổ vào AI brain</span></h1>
-      <p class="lede">Thêm <b>Sources panel (3 refs)</b> + <b>Confidence bar</b>. User nhìn 1 phát là biết AI dựa vào đâu.</p>
+      <div class="slide-kicker"><span class="pill t">T · Transparency</span> Bước 2</div>
+      <h1>Mỗi câu trả lời đi kèm <span style="color: var(--orange);">nguồn + độ tin cậy</span>.</h1>
+      <p class="lede">Panel bên phải hiện 2–3 nguồn AI tham khảo, và một badge confidence. User nhìn là biết — không phải đoán.</p>
 
       <div class="slide-split">
         <div class="slide-copy">
           <div class="prompt" data-label="Prompt T · Transparency"><span style="color: var(--orange); font-weight: 600;">[T]</span> Add transparency: for each AI response, populate right panel with
 "Sources" section (list 2-3 doc refs the AI claims to use) and
 "Confidence" section (High/Medium/Low badge + bar).</div>
-
-          <div class="faq">
-            <span class="fl">Why</span>
-            <b>Transparency không phải show hết.</b> Show <b>đủ để user có action</b>. Source user click được = trust. Chain-of-thought dump = overwhelm. Panel = chỗ show những gì user actionable.
-          </div>
         </div>
         <div class="slide-media">
           <figure>
             <img src="images/slide-18-demo2-tcr-panel-zoom.png" alt="Notebook zoom of context panel: sources, confidence bar, pin, regenerate" />
-            <figcaption class="caption">Panel = T ở level UI</figcaption>
+            <figcaption class="caption">Panel = chỗ AI show "mình dựa vào đâu"</figcaption>
           </figure>
         </div>
       </div>
@@ -1438,25 +1413,20 @@ Use src/llmService.js for LLM calls.</div>
   <section class="slide" data-title="Prompt C · Control">
     <span class="slide-num">17 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker"><span class="pill c">C · Control</span> Deep demo · 10 phút</div>
-      <h1>Câu trả lời chưa chính xác? <span style="color: var(--blue);">User có đường sửa</span></h1>
-      <p class="lede">"Flag" link dưới mỗi câu + correction flow + <b>Stop</b> button giữa khi AI đang stream.</p>
+      <div class="slide-kicker"><span class="pill c">C · Control</span> Bước 3</div>
+      <h1>AI trả lời sai? <span style="color: var(--blue);">User có đường sửa.</span></h1>
+      <p class="lede">Dưới mỗi câu có nút "Flag" — user nói chỗ nào sai, nên sửa thế nào. Đang stream thì có nút Stop.</p>
 
       <div class="slide-split reverse">
         <div class="slide-copy">
           <div class="prompt" data-label="Prompt C · Control" data-accent="blue"><span style="color: var(--blue); font-weight: 600;">[C]</span> Add control: "Flag as inaccurate" link below each AI response (opens
 correction form: what was wrong + what should it say), "Stop" button
 while streaming, pin-a-source from panel so AI prioritizes it next turn.</div>
-
-          <div class="faq">
-            <span class="fl">Why flag, not just thumbs-down</span>
-            <b>Flag = data loop, không phải courtesy.</b> Mỗi flag + correction = training signal. Thumbs-down = bạn mất user, không lấy được gì. Correction form biến 1 user angry thành 1 data point giá trị.
-          </div>
         </div>
         <div class="slide-media">
           <figure>
             <img src="images/slide-15-demo1-tcr-sticky-stack.png" alt="Sketch: flag + correction flow layered onto chat UI" />
-            <figcaption class="caption">C = user đồng tác giả</figcaption>
+            <figcaption class="caption">User sửa được = user tin được</figcaption>
           </figure>
         </div>
       </div>
@@ -1467,25 +1437,20 @@ while streaming, pin-a-source from panel so AI prioritizes it next turn.</div>
   <section class="slide" data-title="Prompt R · Recovery">
     <span class="slide-num">18 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker"><span class="pill r">R · Recovery</span> Deep demo · 8 phút</div>
-      <h1>Recovery = <span style="color: var(--green);">pre-flight</span>, không chỉ post-hoc catch</h1>
-      <p class="lede">Mỗi câu trả lời có nút <b>Retry</b>. Trước khi gọi AI, check input — câu quá ngắn hoặc mơ hồ thì gợi ý bạn viết rõ hơn.</p>
+      <div class="slide-kicker"><span class="pill r">R · Recovery</span> Bước 4</div>
+      <h1>Chặn lỗi <span style="color: var(--green);">trước khi</span> nó xảy ra.</h1>
+      <p class="lede">User gõ câu quá ngắn hoặc mơ hồ — cảnh báo luôn, đừng gọi AI làm gì. Lỡ trả lời sai rồi thì có nút Retry.</p>
 
       <div class="slide-split">
         <div class="slide-copy">
           <div class="prompt" data-label="Prompt R · Recovery" data-accent="green"><span style="color: var(--green); font-weight: 600;">[R]</span> Add recovery: "Retry" button on each AI message (regenerate with
 same context), pre-flight check — if user input &lt; 5 chars show
 warning "Câu hỏi quá ngắn, có thể AI hiểu lệch", suggest clearer phrasing.</div>
-
-          <div class="faq">
-            <span class="fl">Why pre-flight</span>
-            <b>Bug cheapest to catch là bug chưa xảy ra.</b> User gõ "aaa" — không cần call LLM, cảnh báo trước. Tiết kiệm cost + user không cần đọc câu trả lời rác. Post-hoc retry vẫn giữ, nhưng pre-flight chặn 60% lỗi dễ.
-          </div>
         </div>
         <div class="slide-media">
           <figure>
             <img src="images/slide-16-demo1-adapt-skeleton.png" alt="Sketch: pre-flight validation + retry flow on chat" />
-            <figcaption class="caption">R = chặn lỗi trước khi nó xảy ra</figcaption>
+            <figcaption class="caption">Lỗi rẻ nhất là lỗi không xảy ra</figcaption>
           </figure>
         </div>
       </div>
@@ -1496,18 +1461,18 @@ warning "Câu hỏi quá ngắn, có thể AI hiểu lệch", suggest clearer ph
   <section class="slide" data-title="1 pattern, nhiều app">
     <span class="slide-num">19 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker">Deep demo · Pattern transfer</div>
-      <h1>Chat + <b style="color: var(--blue);">source</b> → Chat + <b style="color: var(--orange);">chart</b></h1>
-      <p class="lede">Giữ nguyên shell. Giữ nguyên 3 prompt T·C·R. <b>Đổi mỗi payload trong panel</b> — thành app mới.</p>
+      <div class="slide-kicker">1 pattern, nhiều app</div>
+      <h1>App bạn vừa thấy — đổi <span style="color: var(--orange);">panel bên phải</span>, là ra app khác.</h1>
+      <p class="lede">Cùng một UI. Cùng 3 prompt T·C·R. Chỉ đổi nội dung panel từ <b>nguồn tham khảo</b> sang <b>biểu đồ</b> — đã thành app phân tích dữ liệu.</p>
 
       <div class="changes" style="margin-top: 24px;">
         <div class="change" data-color="blue">
-          <div class="cn">Vừa build</div>
-          <h4>Chat + <b>source</b> panel</h4>
+          <div class="cn">Vừa build xong</div>
+          <h4>Chat + panel <b>nguồn</b></h4>
         </div>
         <div class="change" data-color="orange">
-          <div class="cn">Transfer sang</div>
-          <h4>Chat + <b>chart</b> panel</h4>
+          <div class="cn">Áp sang</div>
+          <h4>Chat + panel <b>biểu đồ</b></h4>
         </div>
       </div>
     </div>
@@ -1517,12 +1482,12 @@ warning "Câu hỏi quá ngắn, có thể AI hiểu lệch", suggest clearer ph
   <section class="slide dark" data-title="Skill · Mang về dùng tuần sau">
     <span class="slide-num">20 / 22</span>
     <div class="wrap">
-      <div class="slide-kicker" style="color: var(--orange);">Block 4 · Skill · mang về</div>
+      <div class="slide-kicker" style="color: var(--orange);">Block 4 · Skill mang về</div>
       <h1 style="font-size: clamp(40px, 7vw, 96px); line-height: 1.02;"><code style="color: var(--orange); font-family: var(--font-mono);">/prd-to-screens</code></h1>
-      <p class="lede" style="margin-top: 20px;">Đưa PRD vào, skill sinh ra <b style="color: var(--orange);">4 prompt build</b>. Bạn copy, paste vào Claude Code, review code.</p>
+      <p class="lede" style="margin-top: 20px;">Bạn đưa PRD vào. Skill sinh ra <b style="color: var(--orange);">4 prompt</b>. Copy sang Claude Code, review code nó viết — là xong.</p>
 
       <p class="quote" style="margin-top: 24px; color: var(--light); opacity: 0.85;">
-        Install + cách chạy → refs cuối slide.
+        Cách cài + chạy ở slide cuối.
       </p>
     </div>
   </section>

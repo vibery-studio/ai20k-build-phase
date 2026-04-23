@@ -1060,11 +1060,11 @@
               <span class="team-chip blue">Tra cứu quy định &amp; admissions</span>
               <span class="team-chip blue">LMS chatbot có memory</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User hỏi chat, agent trả lời. <b>Panel bên cạnh</b> show context — source docs, progress, reasoning.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User hỏi, AI trả lời ở cột trái. Cột phải có panel — để AI show nguồn tham khảo, tiến độ học, hoặc cách nó suy luận.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Panel hiển thị gì?</b> — AI TA show student progress. Admissions show policy refs. Socratic show "Socratic mode" badge. Chọn 1 thứ user cần action với, đừng dump hết.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Panel bên phải nên show cái gì? Trợ giảng AI thì hiện tiến độ bài học của sinh viên. Admissions thì hiện link quy định được trích. Gia sư Socratic thì hiện badge "chế độ Socratic". <b>Chọn một thứ user thực sự cần — đừng dồn hết vào panel.</b>
             </div>
           </div>
           <div class="deeplinks">
@@ -1102,11 +1102,11 @@
               <span class="team-chip teal">Rà soát CAD / bản vẽ</span>
               <span class="team-chip teal">Số hóa bảng trắng</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User upload file (CSV, audio, PDF), agent xử lý <b>batch</b>, trả về dashboard — aggregate stats + top quotes + trend chart.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User upload file lên — CSV feedback, audio ghi âm, PDF. AI xử lý cả đống, rồi trả về một dashboard: thống kê tổng, vài trích dẫn nổi bật, biểu đồ xu hướng.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Cho user xem raw data bao nhiêu?</b> — hide hết = user không tin. Show hết = overwhelm. Middle: <b>show 3-5 examples + aggregate stats</b>. User drill-down khi cần.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Có cho user xem dữ liệu gốc không? Giấu hết — user không tin kết quả AI đưa ra. Show hết — user ngợp. <b>Cân bằng: hiện 3–5 ví dụ + thống kê tổng, ai muốn xem sâu thì click vào.</b>
             </div>
           </div>
         </div>
@@ -1134,11 +1134,11 @@
               <span class="team-chip orange">Search engine / semantic</span>
               <span class="team-chip orange">Knowledge graph query</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">Text in, structured data out. Không build live hôm nay — có <b>interactive ref</b> link dưới đây.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User hỏi bằng ngôn ngữ tự nhiên, AI trả về dữ liệu có cấu trúc — bảng, biểu đồ, hoặc kết quả SQL. Bữa nay không code live, nhưng có bản interactive ở link dưới.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Show SQL / logic đã generate không?</b> — Yes → trust up, learning curve up. No → magic, nhưng user không debug được. Lựa chọn này = lựa chọn về target user (admin vs. end-user).
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Có hiện câu SQL (hoặc logic) mà AI viết ra cho user xem không? Hiện — user tin hơn, nhưng cần biết đọc SQL. Không hiện — trông như magic, sai thì user không biết sửa. <b>Lựa chọn này phụ thuộc user của bạn: admin hay người dùng cuối.</b>
             </div>
           </div>
           <div class="deeplinks">
@@ -1176,11 +1176,11 @@
               <span class="team-chip purple">Viết nhận xét học bạ</span>
               <span class="team-chip purple">Thiết kế CTĐT</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">Guided multi-step creation với compliance check. User điền từng bước, agent audit <b>inline</b> — không chờ submit.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">User điền form theo từng bước. AI đọc ngay trong lúc điền, thấy sai chuẩn là báo luôn — không phải chờ bấm Submit mới biết.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Audit errors block flow hay chỉ highlight?</b> — Compliance cao (accreditation, legal): <b>must-block</b>. Compliance vừa (teacher judgment, draft): <b>highlight + override</b>. Chọn sai = user chạy vòng hoặc bỏ dùng.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Khi AI phát hiện lỗi — chặn user đi tiếp, hay chỉ tô đỏ cảnh báo? <b>Chặn</b> nếu là chuẩn bắt buộc (ABET, pháp lý). <b>Chỉ cảnh báo</b> nếu là gợi ý (giáo viên có thể tự quyết). Nhầm hai cái này — user sẽ bực và bỏ app.
             </div>
           </div>
         </div>
@@ -1208,11 +1208,11 @@
               <span class="team-chip red">Onboarding nhân viên</span>
               <span class="team-chip red">Social commerce agent</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;"><b>Irreversible action</b> (send tin qua Zalo / SMS / Email, push notification). Cần <b>double-confirmation UI</b> — không có "Ctrl-Z" trong đời thật.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">AI viết sẵn tin nhắn. User đọc, sửa, duyệt, rồi bấm Gửi. Tin đi qua Zalo / SMS / Email — gửi xong không thu lại được. <b>Ngoài đời không có Ctrl-Z.</b></p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Confirmation UX — double-tap? type 'CONFIRM'? preview per channel?</b> SMS preview ≠ Email preview ≠ Push preview. Mỗi channel = 1 preview card, user scan nhanh.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Bước xác nhận nên thiết kế thế nào? Bấm 2 lần? Gõ chữ "CONFIRM"? Xem preview từng kênh? Lưu ý: SMS, Email, Push notification hiện ra khác nhau trên điện thoại — <b>mỗi kênh nên có một preview riêng để user quét nhanh trước khi gửi.</b>
             </div>
           </div>
         </div>
@@ -1240,11 +1240,11 @@
               <span class="team-chip green">Rà soát hợp đồng / chính sách</span>
               <span class="team-chip green">Liêm chính học thuật</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">Agent classify hàng loạt, human review sau. Design cho <b>throughput</b>. Không build live — có <b>interactive ref</b> link dưới đây.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">AI xử lý hàng loạt trước — phân loại, chấm điểm, gắn flag. Người kiểm duyệt mở dashboard, duyệt từng cái theo queue. Ở đây chưa code live, link dưới có bản interactive.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>Bulk actions + filter + agent confidence ranking.</b> Sort by confidence ascending = AI lưỡng lự lên đầu. High confidence = auto-trust. Keyboard shortcut = signal reviewer là power-user.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Thiết kế cho reviewer <b>làm nhanh</b>. Cần 3 thứ: filter để lọc, action hàng loạt để khỏi click từng cái, và sắp xếp theo confidence — <b>cái AI phân vân nhất lên đầu</b> (cần người xem), cái chắc chắn đẩy xuống dưới. Phím tắt bàn phím = nâng tốc độ 3–5 lần.
             </div>
           </div>
           <div class="deeplinks">
@@ -1282,11 +1282,11 @@
               <span class="team-chip yellow">Thí nghiệm ảo multi-agent</span>
               <span class="team-chip yellow">Hệ thống luyện tiếng Anh</span>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; margin: 0;">Voice, live audio, token-by-token LLM output. <b>Low-latency pipeline.</b></p>
+            <p style="font-size: 16px; line-height: 1.6; margin: 0;">App xử lý thời gian thực — voice, audio live, hoặc AI trả lời từng chữ một. Mọi thứ đều phải nhanh, độ trễ thấp.</p>
 
             <div class="kd">
-              <span class="kl">Key UX decision</span>
-              <b>What shows during the wait?</b> — partial transcript? progress bar? "thinking..." animation? User <b>không bao giờ thấy blank screen</b>. Blank = user nghĩ app hỏng.
+              <span class="kl">Câu hỏi UX quan trọng</span>
+              Trong lúc AI đang xử lý, user thấy gì? Transcript đang gõ từng chữ? Thanh progress? Hoạt ảnh "đang suy nghĩ"? Chọn gì cũng được, chỉ cần <b>user không bao giờ nhìn màn hình trống</b>. Trống = user tưởng app hỏng.
             </div>
           </div>
         </div>

@@ -47,3 +47,10 @@ Khuyến khích mentor và sinh viên cùng đóng góp:
 - Bổ sung tài liệu mới trong thư mục `guide/`
 - Viết ngắn gọn, có tính hành động và bám sát mục tiêu Build Phase
 - Ưu tiên định dạng checklist và ví dụ thực tế khi phù hợp
+
+## buildflow — quy trinh build tu y tuong den URL chay that
+
+Thu muc [`buildflow/`](buildflow/) la template quy trinh 11 stage co gate (idea → research → scope → PRD → ADR → contract → cards → build → review → deploy → verify-live → retro), kem skill `/flow` chay trong Claude Code.
+
+- **Trang gioi thieu:** [tieng Viet](https://vibery-studio.github.io/ai20k-build-phase/) · [English](https://vibery-studio.github.io/ai20k-build-phase/en/)
+- **Bat dau:** copy thu muc `buildflow/` thanh project cua ban, mo Claude Code trong do, go `/flow next`.

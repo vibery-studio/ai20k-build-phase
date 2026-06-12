@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>buildflow — từ ý tưởng đến URL chạy thật, qua từng gate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F0EEE6; --paper-2:#E8E5DA; --ink:#1A1A18; --ink-soft:#46443E; --ink-faint:#73706A;
+    --rule:#D6D2C4; --clay:#CC785C; --clay-deep:#B5573C; --clay-wash:#E5D3C5;
+    --green:#5C7A5C; --max:1080px; --read:680px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+  body{background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:18px;line-height:1.6;letter-spacing:-0.005em}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+  .serif{font-family:"Newsreader","Iowan Old Style",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+  .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:.84em}
+  code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em;background:var(--clay-wash);padding:1px 6px;border-radius:4px;color:var(--clay-deep)}
+  a{color:var(--clay-deep);text-decoration:none;border-bottom:1px solid rgba(181,87,60,.35)}
+  a:hover{border-color:var(--clay-deep)}
+  #progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--clay);z-index:50;transition:width .1s linear}
+  header.bar{position:fixed;top:0;left:0;right:0;z-index:40;background:rgba(240,238,230,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:600;font-size:15px;border:0}
+  .brand b{color:var(--clay-deep)}
+  nav.links{display:flex;gap:24px}
+  nav.links a{color:var(--ink-soft);font-size:14px;border:0}
+  nav.links a:hover{color:var(--clay-deep)}
+  @media(max-width:760px){nav.links{display:none}}
+  section{padding:96px 0;border-top:1px solid var(--rule)}
+  section:first-of-type{border-top:0}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay-deep);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--clay)}
+  h1{font-size:clamp(40px,6.4vw,72px);line-height:1.04;font-weight:400}
+  h1 em{font-style:italic;color:var(--clay-deep)}
+  h2{font-size:clamp(30px,4.4vw,46px);line-height:1.1;font-weight:400;max-width:18ch}
+  h3{font-size:20px;font-weight:500;font-family:"Inter",sans-serif}
+  p.lede{font-size:21px;line-height:1.55;color:var(--ink-soft);max-width:var(--read);margin-top:24px}
+  p.body{color:var(--ink-soft);max-width:var(--read);margin-top:18px}
+  .rv{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease}
+  .rv.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+  #top{padding-top:168px;padding-bottom:88px}
+  .hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:38px}
+  .badge{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink-soft);border:1px solid var(--rule);border-radius:100px;padding:7px 15px;background:var(--paper)}
+  .badge b{color:var(--clay-deep);font-weight:500}
+
+  /* flow rail */
+  .rail{margin-top:56px}
+  .rail-row{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+  .stage{flex:1 1 130px;min-width:118px;border:1px solid var(--rule);border-radius:10px;background:var(--paper-2);padding:14px 14px 12px;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+  .stage:hover,.stage.on{border-color:var(--clay);background:#EFE6DC}
+  .stage .sn{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.08em}
+  .stage h4{font-size:15px;font-weight:600;margin-top:5px}
+  .stage .gate-dot{position:absolute;top:13px;right:13px;width:8px;height:8px;border-radius:50%;background:var(--clay)}
+  .stage.ship .gate-dot{background:var(--green)}
+  .rail-label{display:flex;gap:8px;margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink-faint);letter-spacing:.06em}
+  .rail-label .pl{flex:6;border-top:2px solid var(--clay);padding-top:7px}
+  .rail-label .sh{flex:5;border-top:2px solid var(--green);padding-top:7px}
+  .gate-reveal{margin-top:26px;border:1px solid var(--rule);border-left:3px solid var(--clay);border-radius:10px;background:var(--paper-2);padding:20px 24px;max-width:var(--read)}
+  .gate-reveal .gq{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay-deep);margin-bottom:8px}
+  .gate-reveal p{color:var(--ink-soft);font-size:16px}
+  .gate-reveal .art{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink-faint);margin-top:10px}
+
+  /* gate demo */
+  .demo{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  @media(max-width:820px){.demo{grid-template-columns:1fr}}
+  .panel{border:1px solid var(--rule);border-radius:12px;background:var(--paper-2);overflow:hidden}
+  .panel .ph{padding:15px 20px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:baseline}
+  .panel .ph h3{font-size:15px}
+  .panel .ph span{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em}
+  .gchecks{list-style:none;padding:12px 20px}
+  .gchecks li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--rule);font-size:15px;color:var(--ink-soft);cursor:pointer}
+  .gchecks li:last-child{border-bottom:0}
+  .gchecks .box{width:18px;height:18px;border:1.5px solid var(--ink-faint);border-radius:4px;flex:0 0 18px;margin-top:3px;display:grid;place-items:center;font-size:12px;color:var(--paper);transition:background .15s,border-color .15s}
+  .gchecks li.ck .box{background:var(--clay-deep);border-color:var(--clay-deep)}
+  .gchecks li.ck .box::after{content:"✓"}
+  .demo-act{display:flex;align-items:center;gap:16px;padding:6px 20px 20px}
+  .btn{font-family:"Inter",sans-serif;font-weight:500;font-size:15px;color:var(--paper);background:var(--clay-deep);border:0;border-radius:8px;padding:11px 22px;cursor:pointer;transition:background .2s,transform .1s}
+  .btn:hover{background:#9e4c34}
+  .btn:active{transform:translateY(1px)}
+  .term{padding:16px 20px 20px;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.75;color:var(--ink-soft);min-height:230px;white-space:pre-wrap}
+  .term .fail{color:var(--clay-deep)}
+  .term .pass{color:var(--green)}
+  .term .dim{color:var(--ink-faint)}
+
+  /* rubric */
+  .rubric{margin-top:48px;border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+  .rrow{display:grid;grid-template-columns:90px 1fr 1.4fr;border-bottom:1px solid var(--rule)}
+  .rrow:last-child{border-bottom:0}
+  .rrow>div{padding:18px 22px}
+  .rrow .g{font-family:"Newsreader",serif;font-size:30px;color:var(--clay-deep);border-right:1px solid var(--rule)}
+  .rrow .m{font-weight:500;font-size:15px;align-self:center}
+  .rrow .e{font-size:14px;color:var(--ink-faint);align-self:center;border-left:1px dashed var(--rule)}
+  .paths{margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:820px){.paths{grid-template-columns:1fr}}
+  .path{border:1px solid var(--rule);border-radius:10px;padding:22px;background:var(--paper-2)}
+  .path .pn{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay-deep)}
+  .path h4{font-size:16px;font-weight:600;margin-top:8px}
+  .path p{font-size:14px;color:var(--ink-soft);margin-top:8px}
+  .trapline{margin-top:34px;font-family:"JetBrains Mono",monospace;font-size:13.5px;color:var(--ink-soft);border-left:3px solid var(--green);padding:4px 0 4px 18px}
+  .trapline b{color:var(--green);font-weight:500}
+
+  /* card anatomy */
+  .card-x{margin-top:52px;display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:start}
+  @media(max-width:860px){.card-x{grid-template-columns:1fr}}
+  .cardfile{border:1px solid var(--rule);border-radius:12px;background:var(--paper-2);font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.8;color:var(--ink-soft);padding:22px 24px;white-space:pre-wrap}
+  .cardfile .h{color:var(--ink);font-weight:500}
+  .cardfile .k{color:var(--clay-deep)}
+  .cardfile .todo{background:var(--clay-wash);border-radius:4px;padding:0 5px;color:var(--clay-deep)}
+  .annos{display:flex;flex-direction:column;gap:14px}
+  .anno{border:1px solid var(--rule);border-radius:10px;padding:16px 18px;background:var(--paper)}
+  .anno h5{font-size:13.5px;font-weight:600;color:var(--clay-deep);font-family:"JetBrains Mono",monospace;letter-spacing:.03em}
+  .anno p{font-size:13.5px;color:var(--ink-soft);margin-top:5px}
+
+  /* sequence */
+  .steps{margin-top:50px;border-top:1px solid var(--rule)}
+  .step{display:grid;grid-template-columns:64px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--rule);transition:background .3s}
+  .step:hover{background:rgba(204,120,92,.05)}
+  .step .n{font-family:"Newsreader",serif;font-size:32px;color:var(--clay);line-height:1}
+  .step h3{margin-top:2px}
+  .step p{color:var(--ink-soft);margin-top:4px;max-width:58ch;font-size:15.5px}
+  .step .tag{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--green);letter-spacing:.06em}
+
+  /* evidence */
+  .ev{margin-top:48px;border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+  .ev table{width:100%;border-collapse:collapse;font-size:14.5px}
+  .ev th{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);text-align:left;padding:14px 20px;border-bottom:1px solid var(--rule);background:var(--paper-2)}
+  .ev td{padding:14px 20px;border-bottom:1px solid var(--rule);color:var(--ink-soft);vertical-align:top}
+  .ev tr:last-child td{border-bottom:0}
+  .ev .pass{font-family:"JetBrains Mono",monospace;color:var(--green);font-size:13px;white-space:nowrap}
+
+  /* commands / start */
+  .cmds{margin-top:44px;max-width:var(--read);border:1px solid var(--rule);border-radius:10px;background:#23211C;overflow:hidden}
+  .cmds .tt{display:flex;gap:7px;padding:11px 15px;border-bottom:1px solid #3a372f}
+  .dot{width:10px;height:10px;border-radius:50%;background:#4a463c}
+  .cmds .tb{padding:18px 20px;font-family:"JetBrains Mono",monospace;font-size:13.5px;line-height:1.9;color:#C9C4B4}
+  .cmds .pr{color:var(--clay)}
+  .cmds .cm{color:#8a857a}
+  footer{padding:60px 0 80px;border-top:1px solid var(--rule)}
+  footer p{font-size:14px;color:var(--ink-faint)}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<header class="bar"><div class="wrap">
+  <a class="brand" href="#top">build<b>flow</b></a>
+  <nav class="links">
+    <a href="#flow">Luồng</a><a href="#gates">Gates</a><a href="#modes">Drives</a><a href="#scope">Scope</a>
+    <a href="#card">Card</a><a href="#sequence">Thứ tự build</a><a href="#guardrails">Guardrails</a><a href="#evidence">Bằng chứng</a><a href="#start">Bắt đầu</a>
+  <a href="en/" style="font-weight:600">EN</a></nav>
+</div></header>
+
+<section id="top"><div class="wrap">
+  <div class="eyebrow rv">Một harness gọn cho phát triển phần mềm end-to-end</div>
+  <h1 class="serif rv">Từ ý tưởng đến <em>URL chạy thật</em>,<br>không phải đến một xấp giấy tờ.</h1>
+  <p class="lede rv">buildflow dẫn một project đi qua mười một stage. Mỗi ranh giới stage có một <strong>gate</strong> —
+  một checklist phải được đáp ứng thật lòng trước khi đi tiếp. File là trạng thái, một command điều khiển toàn bộ,
+  và giết một ý tưởng yếu ngay tại gate là thành công, không phải thất bại.</p>
+  <div class="hero-badges rv">
+    <span class="badge"><b>6</b> planning gates</span>
+    <span class="badge"><b>1</b> command — /flow</span>
+    <span class="badge"><b>3</b> drives — teach / work / auto</span>
+    <span class="badge">done = <b>bằng chứng ngoài đời thật</b></span>
+    <span class="badge"><b>7/7</b> vòng test đã pass</span>
+  </div>
+</div></section>
+
+<section id="flow"><div class="wrap">
+  <div class="eyebrow rv">01 — Luồng</div>
+  <h2 class="serif rv">Mười một stage. Hai nửa.</h2>
+  <p class="body rv">Nửa bên trái để lập kế hoạch — mỗi stage là một file trong <code>flow/</code>, được mở bằng <code>/flow next</code>
+  chỉ khi gate trước đó pass. Nửa bên phải để ship — các stage này nằm <em>trong từng card</em> và lặp lại cho mỗi card.
+  Bấm vào bất kỳ stage nào để xem gate của nó.</p>
+  <div class="rail rv">
+    <div class="rail-row" id="railrow"></div>
+    <div class="rail-label">
+      <div class="pl">PLANNING — một lần cho mỗi project, đi tuyến tính, flow/</div>
+      <div class="sh">SHIPPING — một lần cho mỗi card, chạy theo vòng lặp, cards/</div>
+    </div>
+    <div class="gate-reveal" id="gatereveal">
+      <div class="gq" id="grq">Gate — Stage 00 · Ý tưởng</div>
+      <p id="grp">Bạn có chỉ ra được MỘT người thật hoặc nhóm thật đang đau chỗ này không? Ba câu, không hơn.</p>
+      <div class="art" id="gra">artifact: flow/00-idea.md</div>
+    </div>
+  </div>
+</div></section>
+
+<section id="gates"><div class="wrap">
+  <div class="eyebrow rv">02 — Gates, hai lớp</div>
+  <h2 class="serif rv">Script thì không nịnh được.<br>Reviewer thì không được phép lười đọc.</h2>
+  <p class="body rv">Runner (<code>flow.sh</code>) lo các kiểm tra cơ học — box chưa tick, còn sót placeholder
+  <code>[FILL]</code>, một card bị đánh dấu done nhưng chưa dán evidence. Skill <code>/flow</code> biến AI thành
+  <em>gatekeeper</em> cho những thứ script không tự phán được: nội dung rỗng, evidence giả, nâng grade cho đẹp, contract drift.
+  Nó có thể cho bạn một ví dụ. Nó không bao giờ điền artifact thay bạn.</p>
+  <p class="body rv"><strong>Thử ngay.</strong> Đây là stage-00 gate thật. <code>/flow next</code> sẽ từ chối cho tới khi mọi box được tick thật lòng.</p>
+  <div class="demo rv">
+    <div class="panel">
+      <div class="ph"><h3>flow/00-idea.md</h3><span>gate checklist</span></div>
+      <ul class="gchecks" id="gchecks">
+        <li data-p="Pitch bên dưới dài đúng 3 câu, không hơn"><span class="box"></span>Pitch bên dưới dài đúng 3 câu, không hơn</li>
+        <li data-p="Tôi chỉ ra được ít nhất MỘT người thật/nhóm thật đang đau chỗ này"><span class="box"></span>Tôi chỉ ra được ít nhất MỘT người thật/nhóm thật đang đau chỗ này</li>
+        <li data-p="File này không còn placeholder FILL nào"><span class="box"></span>File này không còn placeholder FILL nào</li>
+      </ul>
+      <div class="demo-act"><button class="btn" id="nextbtn">$ /flow next</button></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>terminal</h3><span>flow.sh</span></div>
+      <div class="term" id="term"><span class="dim">— tick các box, rồi chạy /flow next —</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="modes"><div class="wrap">
+  <div class="eyebrow rv">03 — Ba drives</div>
+  <h2 class="serif rv">Teach rèn người học.<br>Work lập plan. Auto build.</h2>
+  <p class="body rv"><code>/flow mode teach|work</code> quyết định <em>ai viết plan</em>;
+  <code>/flow auto</code> quyết định <em>ai cầm lái phần build</em>. Gates, thang đánh giá, và luật done
+  giống hệt nhau ở mọi drive.</p>
+  <div class="paths rv">
+    <div class="path"><div class="pn">teach — default</div><h4>Bạn viết, AI giữ gate</h4>
+      <p>Người học tự điền từng artifact. Gatekeeper từ chối phần làm hời hợt bằng lý do cụ thể
+      và không bao giờ điền template thay bạn — chính việc người học tự viết mới là phương pháp. Dành cho học thật.</p></div>
+    <div class="path"><div class="pn">work</div><h4>Interview một lần, rồi nó lập plan</h4>
+      <p>AI interview operator một lần, tự draft cả sáu stage trong khi tự qua gate, dừng đúng MỘT lần —
+      scope sign-off — rồi trả về toàn bộ bộ card như một plan summary. Live: 6–8 phút.</p></div>
+    <div class="path"><div class="pn">auto</div><h4>Đưa cards tới done, mỗi card một subagent</h4>
+      <p>Sau preflight (plan hoàn chỉnh, deps graph đủ), một planner session điều phối cards: mỗi card một subagent,
+      git worktree cô lập cho các nhóm chạy song song, planner tự review mọi diff và tự chạy mọi verify.
+      Bảy nguyên tắc giữ đường ray — done = world-state, dừng batch ở operator gates, hai lần vấp mỗi card,
+      không destructive, mọi trạng thái nằm trong files để resume. Run log là AUTO-LOG.md, không phải scrollback.</p></div>
+  </div>
+</div></section>
+
+<section id="scope"><div class="wrap">
+  <div class="eyebrow rv">04 — Scope gate</div>
+  <h2 class="serif rv">Impact × cost,<br>không phải chỉ nhìn cost.</h2>
+  <p class="body rv">Mỗi feature được chấm business-impact TRƯỚC (H = tác động tới tiền hoặc lời hứa lõi ·
+  M = retention, tiết kiệm thời gian · L = không ai trả tiền hay chuyển đổi chỉ vì nó), rồi mới tới AI-coding grade.
+  H-impact có thể biện minh cho cost B/C; <strong>không feature L-impact nào trên grade A được sống</strong> —
+  lỗi v1 kinh điển là đầy feature A-grade L-impact: rẻ để build, vô giá trị để bán. Flow cũng <em>đề xuất</em>
+  tối đa 3 feature impact-first bạn chưa nêu (gắn với GTM research), mặc định OUT, mỗi feature cần quyết định rõ từ bạn.
+  Các cost grade:</p>
+  <div class="rubric rv">
+    <div class="rrow"><div class="g serif">A</div><div class="m">Rẻ với AI</div><div class="e">CRUD, forms, dashboards, content sites, API wrappers</div></div>
+    <div class="rrow"><div class="g serif">B</div><div class="m">Vừa phải</div><div class="e">file processing, integrations, auth via library, single LLM call, HITL AI drafts</div></div>
+    <div class="rrow"><div class="g serif">C</div><div class="m">Đắt</div><div class="e">realtime, payments from scratch, custom auth, autonomous agentic pipelines</div></div>
+  </div>
+  <p class="body rv">Khi nhu cầu thật sự là grade C, chỉ có đúng ba đường tử tế:</p>
+  <div class="paths rv">
+    <div class="path"><div class="pn">Path 1</div><h4>C chính là sản phẩm</h4><p>Đảo thứ tự: feature C đi TRƯỚC (assumption rủi ro nhất đi trước), mọi thứ khác thu nhỏ lại để phục vụ nó. Một C chứng minh value prop — các feature cùng họ để v2.</p></div>
+    <div class="path"><div class="pn">Path 2</div><h4>Re-architect C → B</h4><p>Đòn có leverage cao nhất. Multi-step agent → single LLM call. Auto-send → human-approves-draft. Custom pipeline → managed service. Cùng giá trị, rẻ hơn một grade.</p></div>
+    <div class="path"><div class="pn">Path 3</div><h4>Kill hoặc re-budget</h4><p>Một C không thể rút gọn và không vừa budget. Cả hai kết quả đều thật thà, và giết ở đây gần như không tốn gì — đó là lý do gate phải đặt sớm.</p></div>
+  </div>
+  <div class="trapline rv"><b>Lần chạy thật:</b> “realtime để 2 người không double-book” → re-graded C→A — đó là UNIQUE(court_id, slot_start), không phải websockets. Build đầu tiên.</div>
+  <div class="trapline rv" style="margin-top:14px"><b>Lần chạy thật:</b> “RAG auto-reply bot qua deepagents” → re-architected C→B — draft HITL có manager duyệt, one LLM call. Autonomy đẩy sang v2.</div>
+</div></section>
+
+<section id="card"><div class="wrap">
+  <div class="eyebrow rv">05 — Card</div>
+  <h2 class="serif rv">Card là brief cho một session<br>đủ chặt để AI coder không đi lạc.</h2>
+  <p class="body rv">Sau planning, công việc biến thành cards — mỗi card đúng một việc. Đây là card thật từ lần chạy courtbook,
+  sau một local build đầy đủ với mọi check đều xanh. Để ý nó vẫn ghi gì.</p>
+  <div class="card-x rv">
+    <div class="cardfile"><span class="h"># C-001 — Vertical slice: atomic booking insert sau một deployed URL</span>
+
+<span class="k">status:</span> <span class="todo">todo</span>   ← local green ≠ done
+
+<span class="k">## Scope</span>  POST /api/bookings + UNIQUE(court_id, slot_start)
+          + một page xấu. NO grid, NO VietQR, NO email, NO admin.
+
+<span class="k">## Allowed files</span>  app/main.py · app/db.py · book.html ·
+          migrations/001 · Dockerfile · requirements.txt
+
+<span class="k">## Verify</span>  curl POST → 201 · cùng curl → 409 slot_taken ·
+          SELECT count(*) → 1 · bấm "Book" hai lần trên phone
+
+<span class="k">## Done-evidence</span>  một PUBLIC URL nơi chuỗi two-curl
+          trả về 201 rồi 409 — nêu rõ TRƯỚC khi build
+
+<span class="k">## Evidence</span>  PARTIAL — chỉ là local PoC, deploy gate chưa đạt</div>
+    <div class="annos">
+      <div class="anno"><h5>scope + NOT-list</h5><p>Một việc, và cũng nói rõ những gì không làm. NOT-list là thứ giữ một AI session dài khỏi “tiện tay” build thêm ba feature khác.</p></div>
+      <div class="anno"><h5>verify = runnable commands</h5><p>Không phải ý định. curl thứ hai chứng minh DB constraint; SELECT chứng minh row đã được lưu, không chỉ echo lại. Có cả sabotage checks.</p></div>
+      <div class="anno"><h5>done-evidence = world-state</h5><p>Nêu rõ trước khi build. “Tests pass” và “code merged” chỉ là giữa pipeline — done là một URL đã có người bấm vào.</p></div>
+      <div class="anno"><h5>khoảnh khắc kỷ luật</h5><p>Card này pass mọi local check mà vẫn ghi <strong>todo</strong> — chính executor báo lại: “without CLAUDE.md I'd have flipped the status on passing curls.”</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="sequence"><div class="wrap">
+  <div class="eyebrow rv">06 — Thứ tự build</div>
+  <h2 class="serif rv">Chuỗi card chuẩn.</h2>
+  <p class="body rv">Contract-first, slice sớm, UI sau cùng. Mỗi card là một build session tập trung — cho người hoặc AI coder.
+  Các luật này đi cùng <code>CLAUDE.md</code> của project, nên chúng nằm trong context đúng lúc bắt tay build.</p>
+  <div class="steps rv">
+    <div class="step"><div class="n">1</div><div><h3>Scaffold + CI/CD</h3><p>Repo, deploy pipeline, /healthz trên public URL. Đường deploy phải tồn tại trước mọi feature.</p></div></div>
+    <div class="step"><div class="n">2</div><div><h3>Vertical slice</h3><p>Một contract endpoint + một page xấu nhưng gọi được nó, đã deploy. Vừa tạo động lực, vừa chứng minh integration.</p></div></div>
+    <div class="step"><div class="n">3</div><div><h3>Backend cards</h3><p>Mỗi card một endpoint-group, build THEO contract. Contract là luật — contract sai? Sửa nó trước, rồi mới code.</p></div></div>
+    <div class="step"><div class="n">4</div><div><h3>Contract-test card <span class="tag">— gate “thấy yên tâm” được biến thành khách quan</span></h3><p>Một automated suite bắn vào MỌI contract endpoint, gồm edge + failure cases, trên deployed API.</p></div></div>
+    <div class="step"><div class="n">5</div><div><h3>UI mock card <span class="tag">— gate nhìn-đúng trước khi đụng framework</span></h3><p>Static HTML, copy thật, không logic. Iterate ở đây: sửa mock mất vài giây, sửa framework tốn deploy.</p></div></div>
+    <div class="step"><div class="n">6</div><div><h3>Frontend cards</h3><p>Implement mock đã duyệt, consume contract. Hai bên không tự chế shape.</p></div></div>
+    <div class="step"><div class="n">7</div><div><h3>E2E card</h3><p>Automated browser test chạy trên app ĐÃ DEPLOY, phủ các user actions trong PRD. Lần chạy đó cũng là verify-live.</p></div></div>
+  </div>
+  <p class="body rv" style="margin-top:34px"><strong>Parallel khi đủ an toàn.</strong> Cards khai báo
+  <code>deps:</code>; <code>/flow ready</code> tính xem card todo nào đã xong deps VÀ không bị trùng
+  allowed-files — các card đó có thể build song song, mỗi card một git worktree, merge ngược lại theo thứ tự card
+  với một lần chạy merged app giữa các lần merge. Runner đưa khuyến nghị; operator điều phối.
+  Contract-test và e2e cards về bản chất vẫn phải serial.</p>
+</div></section>
+
+<section id="guardrails"><div class="wrap">
+  <div class="eyebrow rv">07 — Guardrails</div>
+  <h2 class="serif rv">Những luật đi cùng lúc làm việc.</h2>
+  <p class="body rv">Sáu protocol, mỗi cái sinh ra từ một lần vấp thật, và nằm đúng nơi công việc diễn ra —
+  không nằm trong một handbook chẳng ai mở.</p>
+  <div class="paths rv">
+    <div class="path"><div class="pn">Two law files</div><h4>Contract cho shapes, DESIGN.md cho pixels</h4>
+      <p>Mọi UI card được build và review theo design law: thang edit-affordance, page object-first,
+      tokens khóa sẵn, bảng banned words (từ ngữ của engine không lọt ra user copy). Structure là luật;
+      tokens là taste — thay được có chủ ý, không ad-hoc.</p></div>
+    <div class="path"><div class="pn">Playbooks</div><h4>Kiến thức stack đã trả giá</h4>
+      <p>Mỗi stack một playbook, chỉ viết sau khi đã chạy thật thành công — gotcha đặt trên cùng, smoke tests chạy được.
+      Đọc trước khi build trên stack đó; harvest sau khi đã trả học phí bằng một bài học thật. Auto briefs có kèm chúng.</p></div>
+    <div class="path"><div class="pn">Debt</div><h4>Bỏ qua gate là khoản vay, phải ghi sổ</h4>
+      <p>Cố ý skip gate là quyền chính đáng của operator — và mở một dòng trong DEBT.md: exposure cụ thể,
+      cộng điều kiện close-before. Skip thuộc lớp security không bao giờ được im lặng. Status hiển thị số lượng.</p></div>
+    <div class="path"><div class="pn">PR &amp; merge</div><h4>Merge ≠ shipped</h4>
+      <p>Mỗi card một branch, PR = bề mặt review của card, merge theo thứ tự card. Sau merge: deploy, rồi verify
+      trên LIVE URL — chỉ lúc đó card mới đóng. Deploy-success không chứng minh bề mặt đã đổi.</p></div>
+    <div class="path"><div class="pn">Swagger with the API</div><h4>Docs không bao giờ là card chạy đuổi</h4>
+      <p>Spec được serve live ngay từ vertical slice trở đi; mọi backend card verify endpoint của nó xuất hiện
+      trong live /docs. Bonus: route thiếu trong /openapi.json sau một green deploy = image cũ,
+      không phải code của bạn — một curl là ra bệnh.</p></div>
+    <div class="path"><div class="pn">Retro</div><h4>Ba câu hỏi, ba tuyến</h4>
+      <p>Bài học process → RETRO.md. Bài học stack → một playbook. Bài học flow → FLOW-FEEDBACK.md, được đưa upstream
+      về template repo. Project không tự sửa engine cho riêng mình — feedback là kênh hợp lệ.</p></div>
+  </div>
+</div></section>
+
+<section id="evidence"><div class="wrap">
+  <div class="eyebrow rv">08 — Bằng chứng</div>
+  <h2 class="serif rv">Test đúng như cách nó dạy:<br>đối kháng.</h2>
+  <p class="body rv">Sáu vòng test độc lập, mỗi vòng là một AI session mới trong workspace riêng, report được lưu ở
+  <code>docs/test-reports/</code>.</p>
+  <div class="ev rv"><table>
+    <tr><th>Round</th><th>Mode</th><th>Nó chứng minh gì</th><th></th></tr>
+    <tr><td class="mono">R1</td><td>Người học thật thà</td><td>Walk-through đầy đủ; mọi gate cho đi tiếp và từ chối đúng lúc</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R2</td><td>Đối kháng</td><td>8 lần thử gian (tick box trên placeholder, research rỗng, C bị gắn thành B, done không có evidence) — tất cả bị bắt đúng lớp</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R3</td><td>End-to-end</td><td>Folder trống → full plan → cards → retro, không lệch hành vi</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R4</td><td>Ý tưởng thật (tickets + deepagents)</td><td>AI wishlist được chuyển thành 3 single LLM calls; agent framework bị loại với lý do rõ ràng</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R5</td><td>Ý tưởng thật (booking + payments + realtime)</td><td>Realtime→DB constraint (C→A), VietQR tách riêng, chatbot bị cắt; tự bắt được contract drift của mình</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">PoC</td><td>Build thật (C-001)</td><td>Card được build đúng scope; mọi check xanh local; card vẫn ĐÚNG khi giữ todo — deploy gate chưa đạt</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R6</td><td>Rehearsal work mode</td><td>Interview dùng một lần, stages tự draft với research thật, đúng một scope pause, 7 cards + một plan summary</td><td class="pass">PASS</td></tr>
+  </table></div>
+</div></section>
+
+<section id="start"><div class="wrap">
+  <div class="eyebrow rv">09 — Bắt đầu</div>
+  <h2 class="serif rv">Một folder. Một command.</h2>
+  <p class="body rv">Copy template, mở Claude Code trong đó, rồi để gate đầu tiên dạy bạn phương pháp.</p>
+  <div class="cmds rv">
+    <div class="tt"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <div class="tb"><span class="cm"># project của bạn = một bản copy của template</span>
+<span class="pr">$</span> cp -R buildflow my-project && cd my-project && claude
+
+<span class="cm"># tôi đang ở đâu, đang bị chặn bởi gì</span>
+<span class="pr">&gt;</span> /flow
+
+<span class="cm"># check gate, mở stage tiếp theo</span>
+<span class="pr">&gt;</span> /flow next
+
+<span class="cm"># operator chạy project thật? mode interview một lần</span>
+<span class="pr">&gt;</span> /flow mode work
+
+<span class="cm"># sau planning: tạo + validate build cards</span>
+<span class="pr">&gt;</span> /flow card
+<span class="pr">&gt;</span> /flow check C-001
+
+<span class="cm"># hiện có thể build gì — và build song song (worktrees)</span>
+<span class="pr">&gt;</span> /flow ready
+
+<span class="cm"># autonomous build run (preflight, rồi mỗi card một subagent)</span>
+<span class="pr">&gt;</span> /flow auto
+
+<span class="cm"># cuối một run: ba câu hỏi, ba tuyến</span>
+<span class="pr">&gt;</span> /flow retro</div>
+  </div>
+  <p class="body rv" style="margin-top:34px">Ba luật nằm dưới mọi thứ: <strong>inspect first</strong> — evidence trước planning.
+  <strong>Contract là đường nối</strong> — backend build theo nó, UI consume từ nó. <strong>Done = bằng chứng ngoài đời thật</strong> —
+  một URL bạn đã bấm vào, không bao giờ chỉ là “tests pass.”</p>
+</div></section>
+
+<footer><div class="wrap">
+  <p>buildflow — một lite harness chắt ra từ tony-harness. Files là trạng thái · gates là phương pháp · cấu trúc giữ chất lượng.</p>
+</div></footer>
+
+<script>
+  // progress bar
+  addEventListener('scroll',()=>{const h=document.documentElement;
+    document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+  // reveal
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  // flow rail
+  const stages=[
+    {n:'00',t:'Ý tưởng',g:'Bạn có chỉ ra được MỘT người thật/nhóm thật đang đau chỗ này không? Ba câu, không hơn.',a:'flow/00-idea.md',ship:false},
+    {n:'01',t:'Research',g:'Bạn đã INSPECT thứ đang tồn tại chưa — mở đối thủ, trích complaint thật, tìm PRICES thật, và nêu MỘT channel có tên cho 10 user đầu tiên? Không có channel cụ thể = tín hiệu nên kill.',a:'flow/01-research.md',ship:false},
+    {n:'02',t:'Scope',g:'Impact × grade trên mọi feature; không L-impact nào trên grade A; mọi C được biện minh bằng path 1/2/3; các feature được đề xuất đã có quyết định. GO hoặc KILL đã ghi ra — kill ở đây là thành công.',a:'flow/02-scope.md',ship:false},
+    {n:'03',t:'PRD',g:'Một người lạ có thể build v1 từ đây mà không hỏi thêm gì không? Success metric có phải là một con số không?',a:'flow/03-prd.md',ship:false},
+    {n:'04',t:'ADR',g:'Mỗi quyết định có nêu rõ bạn đã REJECT gì không? NOT-doing list đã được viết chưa?',a:'flow/04-adr.md',ship:false},
+    {n:'05',t:'Contract',g:'Mọi PRD feature đều map tới một endpoint; mọi endpoint đều có request VÀ response shapes. Đường nối giữa backend và UI.',a:'flow/05-contract.md',ship:false},
+    {n:'06',t:'Cards',g:'Mỗi card: một việc, allowed files, verify steps chạy được, world-state done-evidence nêu rõ TRƯỚC khi build.',a:'cards/C-NNN.md',ship:true},
+    {n:'07',t:'Build',g:'Chỉ chạm vào allowed files của card. Contract là luật — sai thì sửa contract trước, không tự chế shape.',a:'one card = one session',ship:true},
+    {n:'08',t:'Verify',g:'Chạy thật mọi verify step — cả sabotage case. Dán output thật vào ## Evidence.',a:'card ## Verify',ship:true},
+    {n:'09',t:'Deploy + live',g:'Deploy-success ≠ shipped. Bạn đã quan sát done-evidence trên PUBLIC URL, như một user thật.',a:'card ## Evidence → status: done',ship:true},
+    {n:'10',t:'Retro',g:'Ba câu hỏi, ba tuyến: bài học process → RETRO.md, bài học stack → một playbook, bài học flow → FLOW-FEEDBACK.md (đưa upstream). Open debts đã được kiểm tra.',a:'RETRO.md · playbooks/ · FLOW-FEEDBACK.md',ship:true},
+  ];
+  const row=document.getElementById('railrow');
+  stages.forEach((s,i)=>{
+    const d=document.createElement('div');d.className='stage'+(s.ship?' ship':'')+(i===0?' on':'');
+    d.innerHTML=`<div class="gate-dot"></div><div class="sn">${s.n}</div><h4>${s.t}</h4>`;
+    d.onclick=()=>{document.querySelectorAll('.stage').forEach(x=>x.classList.remove('on'));d.classList.add('on');
+      document.getElementById('grq').textContent=`Gate — Stage ${s.n} · ${s.t}`;
+      document.getElementById('grp').textContent=s.g;
+      document.getElementById('gra').textContent='artifact: '+s.a;};
+    row.appendChild(d);
+  });
+
+  // gate demo
+  const checks=document.querySelectorAll('#gchecks li');
+  checks.forEach(li=>li.onclick=()=>li.classList.toggle('ck'));
+  document.getElementById('nextbtn').onclick=()=>{
+    const term=document.getElementById('term');
+    const open=[...checks].filter(li=>!li.classList.contains('ck'));
+    if(open.length){
+      term.innerHTML=`<span class="fail">GATE FAIL — 00-idea chưa xong:</span>\n`+
+        open.map(li=>`  <span class="fail">- chưa tick:</span> ${li.dataset.p}`).join('\n')+
+        `\n\n<span class="dim">Không đi tiếp. Sửa flow/00-idea.md trước.\n(Giết ý tưởng ở đây cũng là một lối ra hợp lệ.)</span>`;
+    }else{
+      term.innerHTML=`<span class="pass">Gate ✓ trên 00-idea.</span>\nStage đã mở → flow/01-research.md.\n<span class="dim">Điền nó, tick các gate boxes, rồi /flow next.\n\nScript đã check các box. Gatekeeper\nvẫn đọc phần bạn viết — nội dung rỗng\nsẽ bị trả về dù mọi box đều đã tick.</span>`;
+    }
+  };
+</script>
+</body>
+</html>

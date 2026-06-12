@@ -6,3 +6,4 @@ repos
 !resources/.claude/
 .env
 scripts/*CLAUDE.md
+.DS_Store

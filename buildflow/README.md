@@ -44,3 +44,7 @@ HTML mock → frontend → e2e) and all build-session discipline live in **`CLAU
 auto-loaded into every Claude Code session in this repo, so the rules are in context
 exactly when the building happens. Each card = one focused build session; the card is
 the session brief, `/flow check` is the exit gate.
+
+---
+
+**Author:** Tony — [arealisticdreamer.com](http://arealisticdreamer.com/)

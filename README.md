@@ -54,3 +54,4 @@ Thu muc [`buildflow/`](buildflow/) la template quy trinh 11 stage co gate (idea 
 
 - **Landing page:** https://vibery-studio.github.io/ai20k-build-phase/
 - **Bat dau:** copy thu muc `buildflow/` thanh project cua ban, mo Claude Code trong do, go `/flow next`.
+- **Tac gia:** Tony — [arealisticdreamer.com](http://arealisticdreamer.com/)

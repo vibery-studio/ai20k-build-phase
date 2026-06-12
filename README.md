@@ -52,5 +52,5 @@ Khuyến khích mentor và sinh viên cùng đóng góp:
 
 Thu muc [`buildflow/`](buildflow/) la template quy trinh 11 stage co gate (idea → research → scope → PRD → ADR → contract → cards → build → review → deploy → verify-live → retro), kem skill `/flow` chay trong Claude Code.
 
-- **Trang gioi thieu:** [tieng Viet](https://vibery-studio.github.io/ai20k-build-phase/) · [English](https://vibery-studio.github.io/ai20k-build-phase/en/)
+- **Landing page:** https://vibery-studio.github.io/ai20k-build-phase/
 - **Bat dau:** copy thu muc `buildflow/` thanh project cua ban, mo Claude Code trong do, go `/flow next`.

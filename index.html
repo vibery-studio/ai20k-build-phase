@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>buildflow — từ ý tưởng đến URL chạy thật, qua từng gate</title>
+<title>buildflow — idea to deployed URL, through gates</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -150,253 +150,252 @@
 <header class="bar"><div class="wrap">
   <a class="brand" href="#top">build<b>flow</b></a>
   <nav class="links">
-    <a href="#flow">Luồng</a><a href="#gates">Gates</a><a href="#modes">Drives</a><a href="#scope">Scope</a>
-    <a href="#card">Card</a><a href="#sequence">Thứ tự build</a><a href="#guardrails">Guardrails</a><a href="#evidence">Bằng chứng</a><a href="#start">Bắt đầu</a>
-  <a href="en/" style="font-weight:600">EN</a></nav>
+    <a href="#flow">The flow</a><a href="#gates">Gates</a><a href="#modes">Drives</a><a href="#scope">Scope</a>
+    <a href="#card">The card</a><a href="#sequence">Build order</a><a href="#guardrails">Guardrails</a><a href="#evidence">Evidence</a><a href="#start">Start</a>
+  </nav>
 </div></header>
 
 <section id="top"><div class="wrap">
-  <div class="eyebrow rv">Một harness gọn cho phát triển phần mềm end-to-end</div>
-  <h1 class="serif rv">Từ ý tưởng đến <em>URL chạy thật</em>,<br>không phải đến một xấp giấy tờ.</h1>
-  <p class="lede rv">buildflow dẫn một project đi qua mười một stage. Mỗi ranh giới stage có một <strong>gate</strong> —
-  một checklist phải được đáp ứng thật lòng trước khi đi tiếp. File là trạng thái, một command điều khiển toàn bộ,
-  và giết một ý tưởng yếu ngay tại gate là thành công, không phải thất bại.</p>
+  <div class="eyebrow rv">A lite harness for end-to-end software development</div>
+  <h1 class="serif rv">Idea to <em>deployed URL</em>,<br>not idea to paperwork.</h1>
+  <p class="lede rv">buildflow walks one project through eleven stages. Every stage boundary has a <strong>gate</strong> —
+  a checklist that must be honestly satisfied before you advance. The files are the state, one command drives it,
+  and killing a weak idea at a gate is a success, not a failure.</p>
   <div class="hero-badges rv">
     <span class="badge"><b>6</b> planning gates</span>
     <span class="badge"><b>1</b> command — /flow</span>
     <span class="badge"><b>3</b> drives — teach / work / auto</span>
-    <span class="badge">done = <b>bằng chứng ngoài đời thật</b></span>
-    <span class="badge"><b>7/7</b> vòng test đã pass</span>
+    <span class="badge">done = <b>proof in the world</b></span>
+    <span class="badge"><b>7/7</b> test rounds passed</span>
   </div>
 </div></section>
 
 <section id="flow"><div class="wrap">
-  <div class="eyebrow rv">01 — Luồng</div>
-  <h2 class="serif rv">Mười một stage. Hai nửa.</h2>
-  <p class="body rv">Nửa bên trái để lập kế hoạch — mỗi stage là một file trong <code>flow/</code>, được mở bằng <code>/flow next</code>
-  chỉ khi gate trước đó pass. Nửa bên phải để ship — các stage này nằm <em>trong từng card</em> và lặp lại cho mỗi card.
-  Bấm vào bất kỳ stage nào để xem gate của nó.</p>
+  <div class="eyebrow rv">01 — The flow</div>
+  <h2 class="serif rv">Eleven stages. Two halves.</h2>
+  <p class="body rv">The left half plans — each stage is one file in <code>flow/</code>, unlocked by <code>/flow next</code>
+  only when the previous gate passes. The right half ships — those stages live <em>inside each card</em> and repeat per card.
+  Click any stage to see its gate.</p>
   <div class="rail rv">
     <div class="rail-row" id="railrow"></div>
     <div class="rail-label">
-      <div class="pl">PLANNING — một lần cho mỗi project, đi tuyến tính, flow/</div>
-      <div class="sh">SHIPPING — một lần cho mỗi card, chạy theo vòng lặp, cards/</div>
+      <div class="pl">PLANNING — once per project, linear, flow/</div>
+      <div class="sh">SHIPPING — once per card, a loop, cards/</div>
     </div>
     <div class="gate-reveal" id="gatereveal">
-      <div class="gq" id="grq">Gate — Stage 00 · Ý tưởng</div>
-      <p id="grp">Bạn có chỉ ra được MỘT người thật hoặc nhóm thật đang đau chỗ này không? Ba câu, không hơn.</p>
+      <div class="gq" id="grq">Gate — Stage 00 · Idea</div>
+      <p id="grp">Can you name ONE real person or group who has this pain? Three sentences, no more.</p>
       <div class="art" id="gra">artifact: flow/00-idea.md</div>
     </div>
   </div>
 </div></section>
 
 <section id="gates"><div class="wrap">
-  <div class="eyebrow rv">02 — Gates, hai lớp</div>
-  <h2 class="serif rv">Script thì không nịnh được.<br>Reviewer thì không được phép lười đọc.</h2>
-  <p class="body rv">Runner (<code>flow.sh</code>) lo các kiểm tra cơ học — box chưa tick, còn sót placeholder
-  <code>[FILL]</code>, một card bị đánh dấu done nhưng chưa dán evidence. Skill <code>/flow</code> biến AI thành
-  <em>gatekeeper</em> cho những thứ script không tự phán được: nội dung rỗng, evidence giả, nâng grade cho đẹp, contract drift.
-  Nó có thể cho bạn một ví dụ. Nó không bao giờ điền artifact thay bạn.</p>
-  <p class="body rv"><strong>Thử ngay.</strong> Đây là stage-00 gate thật. <code>/flow next</code> sẽ từ chối cho tới khi mọi box được tick thật lòng.</p>
+  <div class="eyebrow rv">02 — Gates, two layers</div>
+  <h2 class="serif rv">A script that can't be charmed.<br>A reviewer that can't be bored.</h2>
+  <p class="body rv">The runner (<code>flow.sh</code>) does the mechanical checks — unchecked boxes, leftover
+  <code>[FILL]</code> placeholders, a card marked done without pasted evidence. The <code>/flow</code> skill makes the AI a
+  <em>gatekeeper</em> for what scripts can't judge: hollow content, fake evidence, grade-laundering, contract drift.
+  It may show you one example. It never fills your artifact.</p>
+  <p class="body rv"><strong>Try it.</strong> This is the real stage-00 gate. <code>/flow next</code> refuses until every box is honestly checked.</p>
   <div class="demo rv">
     <div class="panel">
       <div class="ph"><h3>flow/00-idea.md</h3><span>gate checklist</span></div>
       <ul class="gchecks" id="gchecks">
-        <li data-p="Pitch bên dưới dài đúng 3 câu, không hơn"><span class="box"></span>Pitch bên dưới dài đúng 3 câu, không hơn</li>
-        <li data-p="Tôi chỉ ra được ít nhất MỘT người thật/nhóm thật đang đau chỗ này"><span class="box"></span>Tôi chỉ ra được ít nhất MỘT người thật/nhóm thật đang đau chỗ này</li>
-        <li data-p="File này không còn placeholder FILL nào"><span class="box"></span>File này không còn placeholder FILL nào</li>
+        <li data-p="The pitch below is 3 sentences, no more"><span class="box"></span>The pitch below is 3 sentences, no more</li>
+        <li data-p="I can name at least ONE real person/group who has this pain"><span class="box"></span>I can name at least ONE real person/group who has this pain</li>
+        <li data-p="No FILL placeholders remain in this file"><span class="box"></span>No FILL placeholders remain in this file</li>
       </ul>
       <div class="demo-act"><button class="btn" id="nextbtn">$ /flow next</button></div>
     </div>
     <div class="panel">
       <div class="ph"><h3>terminal</h3><span>flow.sh</span></div>
-      <div class="term" id="term"><span class="dim">— tick các box, rồi chạy /flow next —</span></div>
+      <div class="term" id="term"><span class="dim">— check the boxes, then run /flow next —</span></div>
     </div>
   </div>
 </div></section>
 
 <section id="modes"><div class="wrap">
-  <div class="eyebrow rv">03 — Ba drives</div>
-  <h2 class="serif rv">Teach rèn người học.<br>Work lập plan. Auto build.</h2>
-  <p class="body rv"><code>/flow mode teach|work</code> quyết định <em>ai viết plan</em>;
-  <code>/flow auto</code> quyết định <em>ai cầm lái phần build</em>. Gates, thang đánh giá, và luật done
-  giống hệt nhau ở mọi drive.</p>
+  <div class="eyebrow rv">03 — Three drives</div>
+  <h2 class="serif rv">Teach trains the attendee.<br>Work plans. Auto builds.</h2>
+  <p class="body rv"><code>/flow mode teach|work</code> decides <em>who writes the plan</em>;
+  <code>/flow auto</code> decides <em>who drives the build</em>. The gates, the rubric, and the
+  done-rules are identical everywhere.</p>
   <div class="paths rv">
-    <div class="path"><div class="pn">teach — default</div><h4>Bạn viết, AI giữ gate</h4>
-      <p>Người học tự điền từng artifact. Gatekeeper từ chối phần làm hời hợt bằng lý do cụ thể
-      và không bao giờ điền template thay bạn — chính việc người học tự viết mới là phương pháp. Dành cho học thật.</p></div>
-    <div class="path"><div class="pn">work</div><h4>Interview một lần, rồi nó lập plan</h4>
-      <p>AI interview operator một lần, tự draft cả sáu stage trong khi tự qua gate, dừng đúng MỘT lần —
-      scope sign-off — rồi trả về toàn bộ bộ card như một plan summary. Live: 6–8 phút.</p></div>
-    <div class="path"><div class="pn">auto</div><h4>Đưa cards tới done, mỗi card một subagent</h4>
-      <p>Sau preflight (plan hoàn chỉnh, deps graph đủ), một planner session điều phối cards: mỗi card một subagent,
-      git worktree cô lập cho các nhóm chạy song song, planner tự review mọi diff và tự chạy mọi verify.
-      Bảy nguyên tắc giữ đường ray — done = world-state, dừng batch ở operator gates, hai lần vấp mỗi card,
-      không destructive, mọi trạng thái nằm trong files để resume. Run log là AUTO-LOG.md, không phải scrollback.</p></div>
+    <div class="path"><div class="pn">teach — default</div><h4>You write, the AI gatekeeps</h4>
+      <p>The attendee fills every artifact themselves. The gatekeeper refuses hollow work with a specific
+      reason and never fills a template — the attendee writing it IS the method. Built for learning.</p></div>
+    <div class="path"><div class="pn">work</div><h4>Interview once, then it plans</h4>
+      <p>The AI interviews the operator once, drafts all six stages itself while self-gating, pauses exactly
+      ONCE — the scope sign-off — then delivers the full card set as one plan summary. Live: 6–8 minutes.</p></div>
+    <div class="path"><div class="pn">auto</div><h4>Cards to done, subagent per card</h4>
+      <p>After a preflight (plan complete, deps graph whole), a planner session drives the cards: one subagent
+      per card, worktree isolation for parallel groups, planner reviews every diff and runs every verify itself.
+      Seven principles govern it — done = world-state, halts batch at operator gates, two strikes per card,
+      never destructive, all state in files (resumable). The run log is AUTO-LOG.md, not scrollback.</p></div>
   </div>
 </div></section>
 
 <section id="scope"><div class="wrap">
-  <div class="eyebrow rv">04 — Scope gate</div>
-  <h2 class="serif rv">Impact × cost,<br>không phải chỉ nhìn cost.</h2>
-  <p class="body rv">Mỗi feature được chấm business-impact TRƯỚC (H = tác động tới tiền hoặc lời hứa lõi ·
-  M = retention, tiết kiệm thời gian · L = không ai trả tiền hay chuyển đổi chỉ vì nó), rồi mới tới AI-coding grade.
-  H-impact có thể biện minh cho cost B/C; <strong>không feature L-impact nào trên grade A được sống</strong> —
-  lỗi v1 kinh điển là đầy feature A-grade L-impact: rẻ để build, vô giá trị để bán. Flow cũng <em>đề xuất</em>
-  tối đa 3 feature impact-first bạn chưa nêu (gắn với GTM research), mặc định OUT, mỗi feature cần quyết định rõ từ bạn.
-  Các cost grade:</p>
+  <div class="eyebrow rv">04 — The scope gate</div>
+  <h2 class="serif rv">Impact × cost,<br>not cost alone.</h2>
+  <p class="body rv">Every feature gets a business-impact score FIRST (H = moves money or the core promise ·
+  M = retention, time saved · L = nobody would pay or switch for it), then an AI-coding grade. H-impact justifies
+  B/C cost; <strong>no L-impact feature above grade A survives</strong> — the classic failure is a v1 full of A-grade
+  L-impact features: cheap to build, worthless to sell. The flow also <em>proposes</em> up to 3 impact-first features
+  you didn't list (tied to the GTM research), default OUT, each needing your explicit decision. The cost grades:</p>
   <div class="rubric rv">
-    <div class="rrow"><div class="g serif">A</div><div class="m">Rẻ với AI</div><div class="e">CRUD, forms, dashboards, content sites, API wrappers</div></div>
-    <div class="rrow"><div class="g serif">B</div><div class="m">Vừa phải</div><div class="e">file processing, integrations, auth via library, single LLM call, HITL AI drafts</div></div>
-    <div class="rrow"><div class="g serif">C</div><div class="m">Đắt</div><div class="e">realtime, payments from scratch, custom auth, autonomous agentic pipelines</div></div>
+    <div class="rrow"><div class="g serif">A</div><div class="m">Cheap for AI</div><div class="e">CRUD, forms, dashboards, content sites, API wrappers</div></div>
+    <div class="rrow"><div class="g serif">B</div><div class="m">Moderate</div><div class="e">file processing, integrations, auth via library, single LLM call, HITL AI drafts</div></div>
+    <div class="rrow"><div class="g serif">C</div><div class="m">Expensive</div><div class="e">realtime, payments from scratch, custom auth, autonomous agentic pipelines</div></div>
   </div>
-  <p class="body rv">Khi nhu cầu thật sự là grade C, chỉ có đúng ba đường tử tế:</p>
+  <p class="body rv">When the real need is grade C, there are exactly three honest paths:</p>
   <div class="paths rv">
-    <div class="path"><div class="pn">Path 1</div><h4>C chính là sản phẩm</h4><p>Đảo thứ tự: feature C đi TRƯỚC (assumption rủi ro nhất đi trước), mọi thứ khác thu nhỏ lại để phục vụ nó. Một C chứng minh value prop — các feature cùng họ để v2.</p></div>
-    <div class="path"><div class="pn">Path 2</div><h4>Re-architect C → B</h4><p>Đòn có leverage cao nhất. Multi-step agent → single LLM call. Auto-send → human-approves-draft. Custom pipeline → managed service. Cùng giá trị, rẻ hơn một grade.</p></div>
-    <div class="path"><div class="pn">Path 3</div><h4>Kill hoặc re-budget</h4><p>Một C không thể rút gọn và không vừa budget. Cả hai kết quả đều thật thà, và giết ở đây gần như không tốn gì — đó là lý do gate phải đặt sớm.</p></div>
+    <div class="path"><div class="pn">Path 1</div><h4>The C is the product</h4><p>Invert the cut: the C feature goes FIRST (riskiest assumption first), everything else is minimized to serve it. One C proves the value prop — its siblings are v2.</p></div>
+    <div class="path"><div class="pn">Path 2</div><h4>Re-architect C → B</h4><p>The highest-leverage move. Multi-step agent → single LLM call. Auto-send → human-approves-draft. Custom pipeline → managed service. Same value, one grade cheaper.</p></div>
+    <div class="path"><div class="pn">Path 3</div><h4>Kill or re-budget</h4><p>An irreducible C that doesn't fit the budget. Both outcomes are honest, and killing here costs almost nothing — that's the point of gating early.</p></div>
   </div>
-  <div class="trapline rv"><b>Lần chạy thật:</b> “realtime để 2 người không double-book” → re-graded C→A — đó là UNIQUE(court_id, slot_start), không phải websockets. Build đầu tiên.</div>
-  <div class="trapline rv" style="margin-top:14px"><b>Lần chạy thật:</b> “RAG auto-reply bot qua deepagents” → re-architected C→B — draft HITL có manager duyệt, one LLM call. Autonomy đẩy sang v2.</div>
+  <div class="trapline rv"><b>Real run:</b> “realtime so 2 people don't double-book” → re-graded C→A — it's UNIQUE(court_id, slot_start), not websockets. Built first.</div>
+  <div class="trapline rv" style="margin-top:14px"><b>Real run:</b> “RAG auto-reply bot via deepagents” → re-architected C→B — manager-approved HITL draft, one LLM call. Autonomy cut to v2.</div>
 </div></section>
 
 <section id="card"><div class="wrap">
-  <div class="eyebrow rv">05 — Card</div>
-  <h2 class="serif rv">Card là brief cho một session<br>đủ chặt để AI coder không đi lạc.</h2>
-  <p class="body rv">Sau planning, công việc biến thành cards — mỗi card đúng một việc. Đây là card thật từ lần chạy courtbook,
-  sau một local build đầy đủ với mọi check đều xanh. Để ý nó vẫn ghi gì.</p>
+  <div class="eyebrow rv">05 — The card</div>
+  <h2 class="serif rv">A card is a session brief<br>an AI coder can't wander out of.</h2>
+  <p class="body rv">After planning, work becomes cards — one thing each. This is a real card from the courtbook run,
+  after a full local build with every check green. Note what it still says.</p>
   <div class="card-x rv">
-    <div class="cardfile"><span class="h"># C-001 — Vertical slice: atomic booking insert sau một deployed URL</span>
+    <div class="cardfile"><span class="h"># C-001 — Vertical slice: atomic booking insert behind a deployed URL</span>
 
 <span class="k">status:</span> <span class="todo">todo</span>   ← local green ≠ done
 
 <span class="k">## Scope</span>  POST /api/bookings + UNIQUE(court_id, slot_start)
-          + một page xấu. NO grid, NO VietQR, NO email, NO admin.
+          + one ugly page. NO grid, NO VietQR, NO email, NO admin.
 
 <span class="k">## Allowed files</span>  app/main.py · app/db.py · book.html ·
           migrations/001 · Dockerfile · requirements.txt
 
-<span class="k">## Verify</span>  curl POST → 201 · cùng curl → 409 slot_taken ·
-          SELECT count(*) → 1 · bấm "Book" hai lần trên phone
+<span class="k">## Verify</span>  curl POST → 201 · same curl → 409 slot_taken ·
+          SELECT count(*) → 1 · tap "Book" twice on a phone
 
-<span class="k">## Done-evidence</span>  một PUBLIC URL nơi chuỗi two-curl
-          trả về 201 rồi 409 — nêu rõ TRƯỚC khi build
+<span class="k">## Done-evidence</span>  a PUBLIC URL where the two-curl sequence
+          returns 201 then 409 — named BEFORE building
 
-<span class="k">## Evidence</span>  PARTIAL — chỉ là local PoC, deploy gate chưa đạt</div>
+<span class="k">## Evidence</span>  PARTIAL — local PoC only, deploy gate unmet</div>
     <div class="annos">
-      <div class="anno"><h5>scope + NOT-list</h5><p>Một việc, và cũng nói rõ những gì không làm. NOT-list là thứ giữ một AI session dài khỏi “tiện tay” build thêm ba feature khác.</p></div>
-      <div class="anno"><h5>verify = runnable commands</h5><p>Không phải ý định. curl thứ hai chứng minh DB constraint; SELECT chứng minh row đã được lưu, không chỉ echo lại. Có cả sabotage checks.</p></div>
-      <div class="anno"><h5>done-evidence = world-state</h5><p>Nêu rõ trước khi build. “Tests pass” và “code merged” chỉ là giữa pipeline — done là một URL đã có người bấm vào.</p></div>
-      <div class="anno"><h5>khoảnh khắc kỷ luật</h5><p>Card này pass mọi local check mà vẫn ghi <strong>todo</strong> — chính executor báo lại: “without CLAUDE.md I'd have flipped the status on passing curls.”</p></div>
+      <div class="anno"><h5>scope + NOT-list</h5><p>One thing, stated negatively too. The NOT-list is what keeps a long AI session from helpfully building three other features.</p></div>
+      <div class="anno"><h5>verify = runnable commands</h5><p>Not intentions. The second curl proves the DB constraint; the SELECT proves the row persisted, not echoed. Sabotage checks included.</p></div>
+      <div class="anno"><h5>done-evidence = world-state</h5><p>Named before building. “Tests pass” and “code merged” are mid-pipeline — done is a URL someone clicked.</p></div>
+      <div class="anno"><h5>the discipline moment</h5><p>This card passed every local check and still says <strong>todo</strong> — the executor itself reported: “without CLAUDE.md I'd have flipped the status on passing curls.”</p></div>
     </div>
   </div>
 </div></section>
 
 <section id="sequence"><div class="wrap">
-  <div class="eyebrow rv">06 — Thứ tự build</div>
-  <h2 class="serif rv">Chuỗi card chuẩn.</h2>
-  <p class="body rv">Contract-first, slice sớm, UI sau cùng. Mỗi card là một build session tập trung — cho người hoặc AI coder.
-  Các luật này đi cùng <code>CLAUDE.md</code> của project, nên chúng nằm trong context đúng lúc bắt tay build.</p>
+  <div class="eyebrow rv">06 — Build order</div>
+  <h2 class="serif rv">The standard card sequence.</h2>
+  <p class="body rv">Contract-first, slice early, UI last. Each card is one focused build session — human or AI coder.
+  These rules ship in the project's <code>CLAUDE.md</code>, so they're in context exactly when the building happens.</p>
   <div class="steps rv">
-    <div class="step"><div class="n">1</div><div><h3>Scaffold + CI/CD</h3><p>Repo, deploy pipeline, /healthz trên public URL. Đường deploy phải tồn tại trước mọi feature.</p></div></div>
-    <div class="step"><div class="n">2</div><div><h3>Vertical slice</h3><p>Một contract endpoint + một page xấu nhưng gọi được nó, đã deploy. Vừa tạo động lực, vừa chứng minh integration.</p></div></div>
-    <div class="step"><div class="n">3</div><div><h3>Backend cards</h3><p>Mỗi card một endpoint-group, build THEO contract. Contract là luật — contract sai? Sửa nó trước, rồi mới code.</p></div></div>
-    <div class="step"><div class="n">4</div><div><h3>Contract-test card <span class="tag">— gate “thấy yên tâm” được biến thành khách quan</span></h3><p>Một automated suite bắn vào MỌI contract endpoint, gồm edge + failure cases, trên deployed API.</p></div></div>
-    <div class="step"><div class="n">5</div><div><h3>UI mock card <span class="tag">— gate nhìn-đúng trước khi đụng framework</span></h3><p>Static HTML, copy thật, không logic. Iterate ở đây: sửa mock mất vài giây, sửa framework tốn deploy.</p></div></div>
-    <div class="step"><div class="n">6</div><div><h3>Frontend cards</h3><p>Implement mock đã duyệt, consume contract. Hai bên không tự chế shape.</p></div></div>
-    <div class="step"><div class="n">7</div><div><h3>E2E card</h3><p>Automated browser test chạy trên app ĐÃ DEPLOY, phủ các user actions trong PRD. Lần chạy đó cũng là verify-live.</p></div></div>
+    <div class="step"><div class="n">1</div><div><h3>Scaffold + CI/CD</h3><p>Repo, deploy pipeline, /healthz on a public URL. The deploy path exists before any feature does.</p></div></div>
+    <div class="step"><div class="n">2</div><div><h3>Vertical slice</h3><p>One contract endpoint + one ugly page calling it, deployed. The motivation hit and the integration proof.</p></div></div>
+    <div class="step"><div class="n">3</div><div><h3>Backend cards</h3><p>One endpoint-group per card, built TO the contract. The contract is law — wrong contract? Amend it first, then code.</p></div></div>
+    <div class="step"><div class="n">4</div><div><h3>Contract-test card <span class="tag">— the “feel safe” gate, made objective</span></h3><p>An automated suite hitting EVERY contract endpoint with edge + failure cases against the deployed API.</p></div></div>
+    <div class="step"><div class="n">5</div><div><h3>UI mock card <span class="tag">— look-right gate before framework work</span></h3><p>Static HTML, real copy, no logic. Iterate here: mock retries cost seconds, framework retries cost deploys.</p></div></div>
+    <div class="step"><div class="n">6</div><div><h3>Frontend cards</h3><p>Implement the approved mock, consuming the contract. Neither side improvises shapes.</p></div></div>
+    <div class="step"><div class="n">7</div><div><h3>E2E card</h3><p>Automated browser test over the DEPLOYED app covering the PRD's user actions. Its run doubles as verify-live.</p></div></div>
   </div>
-  <p class="body rv" style="margin-top:34px"><strong>Parallel khi đủ an toàn.</strong> Cards khai báo
-  <code>deps:</code>; <code>/flow ready</code> tính xem card todo nào đã xong deps VÀ không bị trùng
-  allowed-files — các card đó có thể build song song, mỗi card một git worktree, merge ngược lại theo thứ tự card
-  với một lần chạy merged app giữa các lần merge. Runner đưa khuyến nghị; operator điều phối.
-  Contract-test và e2e cards về bản chất vẫn phải serial.</p>
+  <p class="body rv" style="margin-top:34px"><strong>Parallel when it's safe.</strong> Cards declare
+  <code>deps:</code>; <code>/flow ready</code> computes which todo cards have their deps done AND no
+  allowed-files overlap — those may build in parallel, one git worktree per card, merged back in card
+  order with a run-the-merged-app check between merges. The runner advises; the operator dispatches.
+  Contract-test and e2e cards stay serial by nature.</p>
 </div></section>
 
 <section id="guardrails"><div class="wrap">
   <div class="eyebrow rv">07 — Guardrails</div>
-  <h2 class="serif rv">Những luật đi cùng lúc làm việc.</h2>
-  <p class="body rv">Sáu protocol, mỗi cái sinh ra từ một lần vấp thật, và nằm đúng nơi công việc diễn ra —
-  không nằm trong một handbook chẳng ai mở.</p>
+  <h2 class="serif rv">The rules that ride along.</h2>
+  <p class="body rv">Six protocols, each born from a real failure, each living where the work happens —
+  not in a handbook nobody opens.</p>
   <div class="paths rv">
-    <div class="path"><div class="pn">Two law files</div><h4>Contract cho shapes, DESIGN.md cho pixels</h4>
-      <p>Mọi UI card được build và review theo design law: thang edit-affordance, page object-first,
-      tokens khóa sẵn, bảng banned words (từ ngữ của engine không lọt ra user copy). Structure là luật;
-      tokens là taste — thay được có chủ ý, không ad-hoc.</p></div>
-    <div class="path"><div class="pn">Playbooks</div><h4>Kiến thức stack đã trả giá</h4>
-      <p>Mỗi stack một playbook, chỉ viết sau khi đã chạy thật thành công — gotcha đặt trên cùng, smoke tests chạy được.
-      Đọc trước khi build trên stack đó; harvest sau khi đã trả học phí bằng một bài học thật. Auto briefs có kèm chúng.</p></div>
-    <div class="path"><div class="pn">Debt</div><h4>Bỏ qua gate là khoản vay, phải ghi sổ</h4>
-      <p>Cố ý skip gate là quyền chính đáng của operator — và mở một dòng trong DEBT.md: exposure cụ thể,
-      cộng điều kiện close-before. Skip thuộc lớp security không bao giờ được im lặng. Status hiển thị số lượng.</p></div>
+    <div class="path"><div class="pn">Two law files</div><h4>Contract for shapes, DESIGN.md for pixels</h4>
+      <p>Every UI card is built and reviewed against the design law: the edit-affordance ladder, object-first
+      pages, locked tokens, a banned-words table (engine words never reach user copy). Structure is law;
+      tokens are taste — replaceable deliberately, never ad-hoc.</p></div>
+    <div class="path"><div class="pn">Playbooks</div><h4>Paid-for stack knowledge</h4>
+      <p>One playbook per stack, written only after it worked for real — gotcha at the top, runnable smoke tests.
+      Read before building on that stack; harvest after paying for a lesson. Auto briefs include them.</p></div>
+    <div class="path"><div class="pn">Debt</div><h4>Gate-skips are loans, written down</h4>
+      <p>Skipping a gate deliberately is a legit operator call — and opens a DEBT.md line: the exposure,
+      concretely, plus a close-before condition. Security-class skips are never silent. Status shows the count.</p></div>
     <div class="path"><div class="pn">PR &amp; merge</div><h4>Merge ≠ shipped</h4>
-      <p>Mỗi card một branch, PR = bề mặt review của card, merge theo thứ tự card. Sau merge: deploy, rồi verify
-      trên LIVE URL — chỉ lúc đó card mới đóng. Deploy-success không chứng minh bề mặt đã đổi.</p></div>
-    <div class="path"><div class="pn">Swagger with the API</div><h4>Docs không bao giờ là card chạy đuổi</h4>
-      <p>Spec được serve live ngay từ vertical slice trở đi; mọi backend card verify endpoint của nó xuất hiện
-      trong live /docs. Bonus: route thiếu trong /openapi.json sau một green deploy = image cũ,
-      không phải code của bạn — một curl là ra bệnh.</p></div>
-    <div class="path"><div class="pn">Retro</div><h4>Ba câu hỏi, ba tuyến</h4>
-      <p>Bài học process → RETRO.md. Bài học stack → một playbook. Bài học flow → FLOW-FEEDBACK.md, được đưa upstream
-      về template repo. Project không tự sửa engine cho riêng mình — feedback là kênh hợp lệ.</p></div>
+      <p>Branch per card, PR = the card's review surface, merges in card order. After merge: deploy, then verify
+      on the LIVE URL — only then does the card close. Deploy-success is not proof the surface changed.</p></div>
+    <div class="path"><div class="pn">Swagger with the API</div><h4>Docs are never a catch-up card</h4>
+      <p>The served spec is live from the vertical slice onward; every backend card verifies its endpoints
+      appear in the live /docs. Bonus: a route missing from /openapi.json after a green deploy = stale image,
+      not your code — diagnosis in one curl.</p></div>
+    <div class="path"><div class="pn">Retro</div><h4>Three questions, three routes</h4>
+      <p>Process lesson → RETRO.md. Stack lesson → a playbook. Flow lesson → FLOW-FEEDBACK.md, carried upstream
+      to the template repo. Projects never edit the engine for themselves — feedback is the legal channel.</p></div>
   </div>
 </div></section>
 
 <section id="evidence"><div class="wrap">
-  <div class="eyebrow rv">08 — Bằng chứng</div>
-  <h2 class="serif rv">Test đúng như cách nó dạy:<br>đối kháng.</h2>
-  <p class="body rv">Sáu vòng test độc lập, mỗi vòng là một AI session mới trong workspace riêng, report được lưu ở
+  <div class="eyebrow rv">08 — Evidence</div>
+  <h2 class="serif rv">Tested the way it teaches:<br>adversarially.</h2>
+  <p class="body rv">Six independent test rounds, each a fresh AI session in its own workspace, reports archived in
   <code>docs/test-reports/</code>.</p>
   <div class="ev rv"><table>
-    <tr><th>Round</th><th>Mode</th><th>Nó chứng minh gì</th><th></th></tr>
-    <tr><td class="mono">R1</td><td>Người học thật thà</td><td>Walk-through đầy đủ; mọi gate cho đi tiếp và từ chối đúng lúc</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">R2</td><td>Đối kháng</td><td>8 lần thử gian (tick box trên placeholder, research rỗng, C bị gắn thành B, done không có evidence) — tất cả bị bắt đúng lớp</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">R3</td><td>End-to-end</td><td>Folder trống → full plan → cards → retro, không lệch hành vi</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">R4</td><td>Ý tưởng thật (tickets + deepagents)</td><td>AI wishlist được chuyển thành 3 single LLM calls; agent framework bị loại với lý do rõ ràng</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">R5</td><td>Ý tưởng thật (booking + payments + realtime)</td><td>Realtime→DB constraint (C→A), VietQR tách riêng, chatbot bị cắt; tự bắt được contract drift của mình</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">PoC</td><td>Build thật (C-001)</td><td>Card được build đúng scope; mọi check xanh local; card vẫn ĐÚNG khi giữ todo — deploy gate chưa đạt</td><td class="pass">PASS</td></tr>
-    <tr><td class="mono">R6</td><td>Rehearsal work mode</td><td>Interview dùng một lần, stages tự draft với research thật, đúng một scope pause, 7 cards + một plan summary</td><td class="pass">PASS</td></tr>
+    <tr><th>Round</th><th>Mode</th><th>What it proved</th><th></th></tr>
+    <tr><td class="mono">R1</td><td>Honest attendee</td><td>Full walk-through; every gate advanced and refused correctly</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R2</td><td>Adversarial</td><td>8 cheat attempts (checked boxes over placeholders, hollow research, C-graded-as-B, done-without-evidence) — all caught at the right layer</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R3</td><td>End-to-end</td><td>Empty folder → full plan → cards → retro, zero misbehaviors</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R4</td><td>Real idea (tickets + deepagents)</td><td>AI wishlist converted to 3 single LLM calls; agent framework declined with reasons</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R5</td><td>Real idea (booking + payments + realtime)</td><td>Realtime→DB constraint (C→A), VietQR split, chatbot cut; caught its own contract drift</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">PoC</td><td>Real build (C-001)</td><td>Card built exactly to scope; all checks green locally; card correctly STAYED todo — deploy gate unmet</td><td class="pass">PASS</td></tr>
+    <tr><td class="mono">R6</td><td>Work-mode rehearsal</td><td>Interview consumed once, stages self-drafted with real research, exactly one scope pause, 7 cards + one plan summary</td><td class="pass">PASS</td></tr>
   </table></div>
 </div></section>
 
 <section id="start"><div class="wrap">
-  <div class="eyebrow rv">09 — Bắt đầu</div>
-  <h2 class="serif rv">Một folder. Một command.</h2>
-  <p class="body rv">Copy template, mở Claude Code trong đó, rồi để gate đầu tiên dạy bạn phương pháp.</p>
+  <div class="eyebrow rv">09 — Start</div>
+  <h2 class="serif rv">One folder. One command.</h2>
+  <p class="body rv">Copy the template, open Claude Code in it, and let the first gate teach you the method.</p>
   <div class="cmds rv">
     <div class="tt"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-    <div class="tb"><span class="cm"># project của bạn = một bản copy của template</span>
+    <div class="tb"><span class="cm"># your project = a copy of the template</span>
 <span class="pr">$</span> cp -R buildflow my-project && cd my-project && claude
 
-<span class="cm"># tôi đang ở đâu, đang bị chặn bởi gì</span>
+<span class="cm"># where am I, what's blocking</span>
 <span class="pr">&gt;</span> /flow
 
-<span class="cm"># check gate, mở stage tiếp theo</span>
+<span class="cm"># check the gate, unlock the next stage</span>
 <span class="pr">&gt;</span> /flow next
 
-<span class="cm"># operator chạy project thật? mode interview một lần</span>
+<span class="cm"># operator running a real project? interview-once mode</span>
 <span class="pr">&gt;</span> /flow mode work
 
-<span class="cm"># sau planning: tạo + validate build cards</span>
+<span class="cm"># after planning: create + validate build cards</span>
 <span class="pr">&gt;</span> /flow card
 <span class="pr">&gt;</span> /flow check C-001
 
-<span class="cm"># hiện có thể build gì — và build song song (worktrees)</span>
+<span class="cm"># what can be built now — and in parallel (worktrees)</span>
 <span class="pr">&gt;</span> /flow ready
 
-<span class="cm"># autonomous build run (preflight, rồi mỗi card một subagent)</span>
+<span class="cm"># autonomous build run (preflight, then subagent per card)</span>
 <span class="pr">&gt;</span> /flow auto
 
-<span class="cm"># cuối một run: ba câu hỏi, ba tuyến</span>
+<span class="cm"># end of a run: three questions, three routes</span>
 <span class="pr">&gt;</span> /flow retro</div>
   </div>
-  <p class="body rv" style="margin-top:34px">Ba luật nằm dưới mọi thứ: <strong>inspect first</strong> — evidence trước planning.
-  <strong>Contract là đường nối</strong> — backend build theo nó, UI consume từ nó. <strong>Done = bằng chứng ngoài đời thật</strong> —
-  một URL bạn đã bấm vào, không bao giờ chỉ là “tests pass.”</p>
+  <p class="body rv" style="margin-top:34px">Three rules under everything: <strong>inspect first</strong> — evidence before planning.
+  <strong>The contract is the seam</strong> — backend builds to it, UI consumes from it. <strong>Done = proof in the world</strong> —
+  a URL you clicked, never “tests pass.”</p>
 </div></section>
 
 <footer><div class="wrap">
-  <p>buildflow — một lite harness chắt ra từ tony-harness. Files là trạng thái · gates là phương pháp · cấu trúc giữ chất lượng.</p>
+  <p>buildflow — a lite harness distilled from tony-harness. Files are the state · gates are the method · the structure carries the quality.</p>
 </div></footer>
 
 <script>
@@ -409,17 +408,17 @@
 
   // flow rail
   const stages=[
-    {n:'00',t:'Ý tưởng',g:'Bạn có chỉ ra được MỘT người thật/nhóm thật đang đau chỗ này không? Ba câu, không hơn.',a:'flow/00-idea.md',ship:false},
-    {n:'01',t:'Research',g:'Bạn đã INSPECT thứ đang tồn tại chưa — mở đối thủ, trích complaint thật, tìm PRICES thật, và nêu MỘT channel có tên cho 10 user đầu tiên? Không có channel cụ thể = tín hiệu nên kill.',a:'flow/01-research.md',ship:false},
-    {n:'02',t:'Scope',g:'Impact × grade trên mọi feature; không L-impact nào trên grade A; mọi C được biện minh bằng path 1/2/3; các feature được đề xuất đã có quyết định. GO hoặc KILL đã ghi ra — kill ở đây là thành công.',a:'flow/02-scope.md',ship:false},
-    {n:'03',t:'PRD',g:'Một người lạ có thể build v1 từ đây mà không hỏi thêm gì không? Success metric có phải là một con số không?',a:'flow/03-prd.md',ship:false},
-    {n:'04',t:'ADR',g:'Mỗi quyết định có nêu rõ bạn đã REJECT gì không? NOT-doing list đã được viết chưa?',a:'flow/04-adr.md',ship:false},
-    {n:'05',t:'Contract',g:'Mọi PRD feature đều map tới một endpoint; mọi endpoint đều có request VÀ response shapes. Đường nối giữa backend và UI.',a:'flow/05-contract.md',ship:false},
-    {n:'06',t:'Cards',g:'Mỗi card: một việc, allowed files, verify steps chạy được, world-state done-evidence nêu rõ TRƯỚC khi build.',a:'cards/C-NNN.md',ship:true},
-    {n:'07',t:'Build',g:'Chỉ chạm vào allowed files của card. Contract là luật — sai thì sửa contract trước, không tự chế shape.',a:'one card = one session',ship:true},
-    {n:'08',t:'Verify',g:'Chạy thật mọi verify step — cả sabotage case. Dán output thật vào ## Evidence.',a:'card ## Verify',ship:true},
-    {n:'09',t:'Deploy + live',g:'Deploy-success ≠ shipped. Bạn đã quan sát done-evidence trên PUBLIC URL, như một user thật.',a:'card ## Evidence → status: done',ship:true},
-    {n:'10',t:'Retro',g:'Ba câu hỏi, ba tuyến: bài học process → RETRO.md, bài học stack → một playbook, bài học flow → FLOW-FEEDBACK.md (đưa upstream). Open debts đã được kiểm tra.',a:'RETRO.md · playbooks/ · FLOW-FEEDBACK.md',ship:true},
+    {n:'00',t:'Idea',g:'Can you name ONE real person/group with this pain? Three sentences, no more.',a:'flow/00-idea.md',ship:false},
+    {n:'01',t:'Research',g:'Did you INSPECT what exists — competitors opened, real complaints quoted, real PRICES found, and ONE named channel for your first 10 users? No named channel = a kill signal.',a:'flow/01-research.md',ship:false},
+    {n:'02',t:'Scope',g:'Impact × grade on every feature; no L-impact above grade A; every C justified via path 1/2/3; suggested features decided. GO or KILL written down — kill is a success here.',a:'flow/02-scope.md',ship:false},
+    {n:'03',t:'PRD',g:'Could a stranger build v1 from this without asking you anything? Is the success metric a number?',a:'flow/03-prd.md',ship:false},
+    {n:'04',t:'ADR',g:'Does every decision name what you REJECTED? Is the NOT-doing list written?',a:'flow/04-adr.md',ship:false},
+    {n:'05',t:'Contract',g:'Every PRD feature maps to an endpoint; every endpoint has request AND response shapes. The seam between backend and UI.',a:'flow/05-contract.md',ship:false},
+    {n:'06',t:'Cards',g:'Each card: one thing, allowed files, runnable verify steps, world-state done-evidence named BEFORE building.',a:'cards/C-NNN.md',ship:true},
+    {n:'07',t:'Build',g:'Touch only the card’s allowed files. Contract is law — amend it first if it’s wrong, never improvise shapes.',a:'one card = one session',ship:true},
+    {n:'08',t:'Verify',g:'Run every verify step for real — including the sabotage case. Paste actual output into ## Evidence.',a:'card ## Verify',ship:true},
+    {n:'09',t:'Deploy + live',g:'Deploy-success ≠ shipped. You observed the done-evidence on the PUBLIC URL, as a user.',a:'card ## Evidence → status: done',ship:true},
+    {n:'10',t:'Retro',g:'Three questions, three routes: process lesson → RETRO.md, stack lesson → a playbook, flow lesson → FLOW-FEEDBACK.md (carried upstream). Open debts checked.',a:'RETRO.md · playbooks/ · FLOW-FEEDBACK.md',ship:true},
   ];
   const row=document.getElementById('railrow');
   stages.forEach((s,i)=>{
@@ -439,11 +438,11 @@
     const term=document.getElementById('term');
     const open=[...checks].filter(li=>!li.classList.contains('ck'));
     if(open.length){
-      term.innerHTML=`<span class="fail">GATE FAIL — 00-idea chưa xong:</span>\n`+
-        open.map(li=>`  <span class="fail">- chưa tick:</span> ${li.dataset.p}`).join('\n')+
-        `\n\n<span class="dim">Không đi tiếp. Sửa flow/00-idea.md trước.\n(Giết ý tưởng ở đây cũng là một lối ra hợp lệ.)</span>`;
+      term.innerHTML=`<span class="fail">GATE FAIL — 00-idea is not done:</span>\n`+
+        open.map(li=>`  <span class="fail">- unchecked:</span> ${li.dataset.p}`).join('\n')+
+        `\n\n<span class="dim">No advance. Fix flow/00-idea.md first.\n(Killing the idea here is also a valid exit.)</span>`;
     }else{
-      term.innerHTML=`<span class="pass">Gate ✓ trên 00-idea.</span>\nStage đã mở → flow/01-research.md.\n<span class="dim">Điền nó, tick các gate boxes, rồi /flow next.\n\nScript đã check các box. Gatekeeper\nvẫn đọc phần bạn viết — nội dung rỗng\nsẽ bị trả về dù mọi box đều đã tick.</span>`;
+      term.innerHTML=`<span class="pass">Gate ✓ on 00-idea.</span>\nStage unlocked → flow/01-research.md.\n<span class="dim">Fill it, check its gate boxes, then /flow next.\n\nThe script checked the boxes. The gatekeeper\nstill reads what you wrote — hollow content\ngets sent back even with every box checked.</span>`;
     }
   };
 </script>
